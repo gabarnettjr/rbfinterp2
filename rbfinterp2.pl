@@ -1,5 +1,21 @@
 # windows
 
+# This is the main script to be called to interpolate (x, y, f) to 
+# (xe, ye, fe_approx).  In order for this script to work, you need to have some
+# text files saved in a common location, so they can be loaded in by the script.
+# These four files should be saved in a coordinate directory:
+# x.txt, y.txt, xe.txt, ye.txt (nodes and evaluation points)
+# This should be saved in a subfolder ($dataDir) of the coordinate directory:
+# f.txt (function values at the nodes)
+# In addition, if you wish to compare to some known exact values at the
+# evaluation points, then you should also include this file in $dataDir:
+# fe.txt (function values at the evaluation points)
+
+# If you have all of this, then the script will produce the file fe_approx.txt,
+# which will contain estimated values of the function at the evaluation points.
+
+################################################################################
+
 use strict;
 use warnings;
 

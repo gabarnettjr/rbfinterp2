@@ -11,7 +11,7 @@ sub loadArray {
     my $file = shift;
 
     unless (open FILE, "<$file") {
-        die "\nUnable to open file for reading.\n";
+        print STDERR "Unable to open file for reading.\n"; die;
     }
     my @values = <FILE>;
     close FILE;
@@ -25,10 +25,10 @@ sub saveArray {
     my $values = shift;
 
     unless (open FILE, ">$fileName") {
-        die "\nUnable to open file for writing.\n";
+        print STDERR "Unable to open file for writing.\n"; die;
     }
     foreach my $val (@{$values}) {
-        printf FILE "%-17.14f\n", $val;
+        printf FILE "%1.15e\n", $val;
     }
     close FILE;
 }

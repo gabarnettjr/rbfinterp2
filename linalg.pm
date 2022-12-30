@@ -2,6 +2,14 @@
 
 package linalg;
 
+# A package for performing linear algebra operations on matrices and arrays.
+# IMPORTANT: The inputs and outputs for the functions below are always POINTERS
+# to an array/matrix, not the array itself.  The subroutines that begin with the
+# prefix "test_" are a good place to look for examples showing how to use this
+# package.
+
+################################################################################
+
 use strict;
 use warnings;
 

@@ -2,6 +2,10 @@
 
 package io;
 
+# Simple functions for loading or saving a single array as a *.txt file.
+
+################################################################################
+
 use strict;
 use warnings;
 

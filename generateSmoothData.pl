@@ -55,10 +55,6 @@ sub eff {
     # return $z;
 # }
 
-# def eff(x,y):
-    # return np.cos(2*np.pi*x/50000) * np.cos(2*np.pi*y/50000) \
-    # + np.sin(2*np.pi*x/50000) * np.sin(2*np.pi*y/50000)
-
 ################################################################################
 
 io::saveArray("$dataDir\\f.txt", eff($x, $y));

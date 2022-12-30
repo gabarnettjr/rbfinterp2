@@ -1,5 +1,12 @@
 # windows
 
+# Sometimes you already have some nodes that you are working with, (x, y), and
+# what you need are some evaluation points (xe, ye) to interpolate to.  This
+# script will read the files x.txt and y.txt, and use their values to generate
+# a nice collection of corresponding evaluation points for testing.
+
+################################################################################
+
 use strict;
 use warnings;
 
@@ -7,9 +14,24 @@ use lib ".";
 use linalg;
 use io;
 
-my $coordsDir = "myCoords";
-my $ne = 51;
-my $alp = 0;
+################################################################################
+
+# Process the input, if there is any.
+
+my ($coordsDir, $ne, $alp);
+$coordsDir = "myCoords";
+$ne = 51;
+$alp = 0;
+
+if (scalar @ARGV) {
+    $coordsDir = shift;
+}
+if (scalar @ARGV) {
+    $ne = shift;
+}
+if (scalar @ARGV) {
+    $alp = shift;
+}
 
 ################################################################################
 
@@ -33,6 +55,7 @@ $alp = ($b - $a) / ($ne - 1) * $alp;
 
 $ne = scalar @{$xe};
 
+# Jiggle the Cartesian nodes by a fraction $alp of the node spacing.
 for (my $i = 0; $i < $ne; $i++) {
     my $x = @{$xe}[$i];
     my $y = @{$ye}[$i];

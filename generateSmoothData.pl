@@ -1,5 +1,13 @@
 # windows
 
+# If you already have defined nodes (x, y) and evaluation points (xe, ye), then
+# this script will use a smooth function to define data at these points.
+# The script generates f.txt to go with (x, y), and fe.txt to go with (xe, ye).
+# In order for this to work, you need to already have x.txt, y.txt, xe.txt, and
+# ye.txt saved in the folder at location $dataDir.
+
+################################################################################
+
 use strict;
 use warnings;
 
@@ -9,7 +17,10 @@ use lib ".";
 use io;
 use linalg;
 
+################################################################################
+
 my $dataDir;
+
 if ((scalar @ARGV) == 1) {
     $dataDir = shift;
 } else {

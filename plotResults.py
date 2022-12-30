@@ -36,12 +36,12 @@ b = np.max(np.hstack((x, xe)))
 c = np.min(np.hstack((y, ye)))
 d = np.max(np.hstack((y, ye)))
 
-triang = mtri.Triangulation(x, y)                                    # nodes
-TRIANG = mtri.Triangulation(xe, ye)                      # evaluation points
-ms = 1                                                         # marker size
-nc = 32                                                   # number of colors
-box = [a, b, c, d]                                         # plotting window
-lw = 1
+triang = mtri.Triangulation(x, y)                                        # nodes
+TRIANG = mtri.Triangulation(xe, ye)                          # evaluation points
+ms = 1                                                             # marker size
+nc = 9                                                        # number of colors
+box = [a, b, c, d]                                             # plotting window
+lw = .1
 
 ################################################################################
 
@@ -56,6 +56,20 @@ def getContourLevels(vals, useMeanOf = (), minDiff = 2, nColors = 64) :
     clevels = np.linspace(m - D, m + D, nColors + 1)
     return clevels
 
+################################################################################
+
+# Get vertices of triangles, which will be plotted over and over again.
+
+tmp = np.hstack((triang.triangles[0], triang.triangles[0][0]))
+xt = x[tmp]
+yt = y[tmp]
+for i in range(1, len(triang.triangles)) :
+    tmp = np.hstack((triang.triangles[i], triang.triangles[i][0]))
+    xt = np.vstack((xt, x[tmp]))
+    yt = np.vstack((yt, y[tmp]))
+    
+plotTriangles = True
+    
 ################################################################################
 
 # def plotThings(figNum, errXY, FG, errXYe, titleString) :
@@ -78,36 +92,45 @@ if checkError :
 else :
     ax = fig.add_subplot(121)
 cs = ax.tricontourf(triang, errXY, levels = clevels)
+if plotTriangles :
+    for i in range(len(xt)) :
+        ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
 ax.plot(x, y, 'ko', markersize = ms)
 ax.axis('image')
 ax.axis(box)
 fig.colorbar(cs)
-plt.title("Data on Scattered Nodes")
+plt.title("Triangulation of Input Data at Nodes")
 
-# The interpolant evaluated on the grid.
+# The interpolant evaluated at the eval pts.
 if checkError :
     ax = fig.add_subplot(222)
 else :
     ax = fig.add_subplot(122)
 cs = ax.tricontourf(TRIANG, FG, levels = clevels)
+if plotTriangles :
+    for i in range(len(xt)) :
+        ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
 ax.plot(x, y, 'ko', markersize = ms)
-ax.plot(xe, ye, 'r.', markersize = ms/2)
+# ax.plot(xe, ye, 'r.', markersize = ms/2)
 ax.axis('image')
 ax.axis(box)
 fig.colorbar(cs)
-plt.title("Interpolant on Grid")
+plt.title("RBF Interpolant at Eval Pts")
 
 if checkError :
 
     # The known values on the grid.
     ax = fig.add_subplot(223)
     cs = ax.tricontourf(TRIANG, errXYe, levels = clevels)
+    if plotTriangles :
+        for i in range(len(xt)) :
+            ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
     ax.plot(x, y, 'ko', markersize = ms)
-    ax.plot(xe, ye, 'r.', markersize = ms/2)
+    # ax.plot(xe, ye, 'r.', markersize = ms/2)
     ax.axis('image')
     ax.axis(box)
     fig.colorbar(cs)
-    plt.title("Known Values on Grid")
+    plt.title("Known Values at Eval Pts")
 
     # The error relative to the known values on the grid.
     tmp = (FG - errXYe) / np.max(np.abs(errXYe))
@@ -116,11 +139,14 @@ if checkError :
 
     ax = fig.add_subplot(224)
     cs = ax.tricontourf(TRIANG, tmp, levels = clevels)
+    if plotTriangles :
+        for i in range(len(xt)) :
+            ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
     ax.plot(x, y, 'ko', markersize = ms)
-    ax.plot(xe, ye, 'r.', markersize = ms/2)
+    # ax.plot(xe, ye, 'r.', markersize = ms/2)
     ax.axis('image')
     ax.axis(box)
     fig.colorbar(cs)
-    plt.title("Relative Error on Grid")
+    plt.title("Relative Error at Eval Pts")
 
 plt.show()

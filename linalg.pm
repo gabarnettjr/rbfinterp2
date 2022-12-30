@@ -8,14 +8,19 @@ use warnings;
 ################################################################################
 
 sub copy {
-    # Copy a matrix.  This only happens by defaut for arrays in perl.
+    # Copy a matrix or array.  This only happens by defaut for arrays in perl.
 
-    my $A = shift;                      # pointer to the matrix you want to copy
+    my $A = shift;                            # pointer to what you want to copy
 
-    my @B = ();
-    foreach my $row (@{$A}) {
-        my @tmp = @{$row};
-        push @B, \@tmp;
+    my @B;
+    if (ref @{$A}[0]) {
+        @B = ();
+        foreach my $row (@{$A}) {
+            my @tmp = @{$row};
+            push @B, \@tmp;
+        }
+    } else {
+        @B = @{$A};
     }
     return \@B;
 }
@@ -48,12 +53,12 @@ sub min {
 
     my $x = shift;                                  # pointer to the input array
 
-    # Start by setting $m equal to the last element, then replace it if you
-    # find something smaller (or equal) as you look backwards through the array.
+    # Start by setting $m equal to the first element, then replace it if you
+    # find something smaller.
     my $ell = scalar @{$x};
-    my $m = @{$x}[$ell - 1];
-    for (my $i = $ell - 2; $i >= 0; $i--) {
-        if (@{$x}[$i] <= $m) {
+    my $m = @{$x}[0];
+    for (my $i = 1; $i < $ell; $i++) {
+        if (@{$x}[$i] < $m) {
             $m = @{$x}[$i];
         }
     }
@@ -67,12 +72,12 @@ sub indmin {
 
     my $x = shift;                                  # pointer to the input array
 
-    # Start by setting $ind to the index of the last element, then replace it if
-    # you find something smaller (or equal) as you go backwards through @x.
+    # Start by setting $ind to the index of the first element, then replace it
+    # if you find something smaller.
     my $ell = scalar @{$x};
-    my $ind = $ell - 1;
-    for (my $i = $ell - 2; $i >= 0; $i--) {
-        if (@{$x}[$i] <= @{$x}[$ind]) {
+    my $ind = 0;
+    for (my $i = 1; $i < $ell; $i++) {
+        if (@{$x}[$i] < @{$x}[$ind]) {
             $ind = $i;
         }
     }
@@ -86,12 +91,12 @@ sub max {
 
     my $x = shift;                                  # pointer to the input array
 
-    # Start out by setting the max $M equal to the last element, but replace it
-    # if you find something larger (or equal) looking backwards at the array.
+    # Start out by setting the max $M equal to the first element, but replace it
+    # if you find something larger.
     my $ell = scalar @{$x};
-    my $M = @{$x}[$ell - 1];
-    for (my $i = $ell - 2; $i >= 0; $i--) {
-        if (@{$x}[$i] >= $M) {
+    my $M = @{$x}[0];
+    for (my $i = 1; $i < $ell; $i++) {
+        if (@{$x}[$i] > $M) {
             $M = @{$x}[$i];
         }
     }
@@ -105,16 +110,28 @@ sub indmax {
 
     my $x = shift;                                  # pointer to the input array
 
-    # Start by choosing the last index, but replace with a new value if you find
-    # a larger (or equal) element of the array, looking backwards at elements.
+    # Start by choosing the first index, but replace with a new value if you
+    # find a larger element of the array.
     my $ell = scalar @{$x};
-    my $ind = $ell - 1;
-    for (my $i = $ell - 2; $i >= 0; $i--) {
-        if (@{$x}[$i] >= @{$x}[$ind]) {
+    my $ind = 0;
+    for (my $i = 1; $i < $ell; $i++) {
+        if (@{$x}[$i] > @{$x}[$ind]) {
             $ind = $i;
         }
     }
     return $ind;
+}
+
+################################################################################
+
+sub test_min_max {
+    my $x = [4, 9, 7, 5, 8, 2, 1, 6];
+    linalg::printmat($x);
+    print ("min = " . linalg::min($x) . "\n");
+    print ("max = " . linalg::max($x) . "\n");
+    print ("indmin = " . linalg::indmin($x) . "\n");
+    print ("indmax = " . linalg::indmax($x) . "\n");
+    print "\n";
 }
 
 ################################################################################
@@ -157,9 +174,43 @@ sub test_absval {
 
 ################################################################################
 
+sub norm {
+    # Calculate the norm of a simple array (vector).
+    
+    my $x = shift;                                   # array to find the norm of
+    my $type = shift;                             # type of norm (1,2,...,"inf")
+    
+    if (! $type) {
+        return linalg::norm($x, 2);
+    } elsif ($type eq "inf") {
+        return linalg::max(linalg::absval($x));
+    } else {
+        my $n = 0;
+        foreach my $r (@{$x}) {
+            $n += ($r**$type);
+        }
+        $n = $n**(1/$type);
+        return $n;
+    }
+}
+
+################################################################################
+
+sub test_norm {
+    my $x = [1,2,3];
+    linalg::printmat($x);
+    print ("1-norm   = " . linalg::norm($x, 1) . "\n");
+    print ("2-norm   = " . linalg::norm($x) . "\n");
+    print ("3-norm   = " . linalg::norm($x, 3) . "\n");
+    print ("inf-norm = " . linalg::norm($x, "inf") . "\n");
+    print "\n";
+}
+
+################################################################################
+
 sub linspace {
     # Get an array that starts at $a, stops at $b, and contains a total of $n
-    # equally spaced values.
+    # equally spaced values.  If $n = 1, it just gives the avg of $a and $b.
 
     my $a = shift;                                               # left endpoint
     my $b = shift;                                              # right endpoint
@@ -167,7 +218,11 @@ sub linspace {
 
     # Check that the input is of the correct form.
     if (ref $a || ref $b || ref $n) {
-        die "\nInputs should all be scalar values, not references to arrays.\n";
+        print STDERR "Inputs should all be scalar values, not references.\n"; die;
+    } elsif ($n == 1) {
+        my @x = ();
+        push @x, (($a + $b) / 2);
+        return \@x;
     }
 
     # Tolerance to be used when comparing real number values for equality.
@@ -190,9 +245,18 @@ sub linspace {
         print ((scalar @x) . "\n");
         print "$n\n";
         print (abs ($x - $b) . "\n");
-        die "\nSomething went wrong.  These should be equal.\n";
+        print STDERR "Something went wrong.  These should be equal.\n"; die;
     }
     return \@x;
+}
+
+################################################################################
+
+sub test_linspace {
+    my $x = linalg::linspace(0, 1, 11);
+    my $y = linalg::linspace(-10, 10, 21);
+    linalg::printmat($x);
+    linalg::printmat($y);
 }
 
 ################################################################################
@@ -205,9 +269,9 @@ sub get {
 
     # Check input.
     if (! ref $x || ! ref $ind) {
-        die "\nBoth inputs should be references to arrays.\n";
+        print STDERR "Both inputs should be references to arrays.\n"; die;
     } elsif (ref @{$x}[0]) {
-        die "\nOnly works for simple arrays, not matrices.\n";
+        print STDERR "Only works for simple arrays, not matrices.\n"; die;
     }
 
     # Get values and return them in an array.
@@ -229,11 +293,11 @@ sub set {
 
     # Check that the input is okay.
     if ((scalar @{$ind}) != (scalar @{$y})) {
-        die "\nBad array lengths.\n";
+        print STDERR "Bad array lengths.\n"; die;
     } elsif (! ref $x || ! ref $ind || ! ref $y) {
-        die "\nAll inputs should be references to arrays.\n";
+        print STDERR "All inputs should be references to arrays.\n"; die;
     } elsif (ref @{$x}[0] || ref @{$ind}[0] || ref @{$y}[0]) {
-        die "\nInputs should be simple arrays, not matrices.\n";
+        print STDERR "Inputs should be simple arrays, not matrices.\n"; die;
     }
     
     # Set the array elements to the values.
@@ -251,6 +315,7 @@ sub test_get_set {
     my $ind = [2, 4];
     my $y = linalg::get($x, $ind);
     my $z = [-12, 99];
+    linalg::printmat($x);
     linalg::set($x, [1,3], $z);
     linalg::printmat($x);
     linalg::printmat($y);
@@ -269,7 +334,7 @@ sub meshgrid {
     
     # Check that the input is appropriate.
     if (ref @{$x}[0] || ref @{$y}[0]) {
-        die "\nThis only works when both inputs are simple arrays.\n";
+        print STDERR "This only works when both inputs are simple arrays.\n"; die;
     }
 
     # Repeat @x vertically, @y horizontally, and return pointers to matrices.
@@ -308,7 +373,7 @@ sub flatten {
     
     # Make sure that the input is a matrix.
     if (! ref @{$A}[0]) {
-        die "\nOnly a matrix can be flattened.\n";
+        print STDERR "Only a matrix can be flattened.\n"; die;
     }
 
     # Push each row of matrix @A onto array @x, then return @x.
@@ -323,55 +388,76 @@ sub flatten {
 ################################################################################
 
 sub scalarmul {
-    # Multiply an array by a scalar.
+    # Multiply an array or matrix by a scalar.
 
-    my @x;                                                               # array
+    my $x;                                                               # array
     my $r;                                                              # scalar
 
     # Determine the ordering of the inputs.
-    if ((ref $_[0]) && ! (ref $_[1])) {
-        @x = @{(shift)};
+    if (ref $_[0] && ! ref $_[1]) {
+        $x = linalg::copy(shift);
         $r = shift;
-    } elsif ((ref $_[1]) && ! (ref $_[0])) {
+    } elsif (ref $_[1] && ! ref $_[0]) {
         $r = shift;
-        @x = @{(shift)};
+        $x = linalg::copy(shift);
     } else {
-        die "\nImproper input.\n";
+        print STDERR "Improper input.\n";  die;
     }
     
-    # Multiply each element of @x by $r, then return @x.
-    my $n = scalar @x;
-    for (my $i = 0; $i < $n; $i++) {
-        $x[$i] *= $r;
+    # Multiply each element of @x by $r, then return a pointer to @x.
+    if (ref @{$x}[0]) {
+        for (my $i = 0; $i < (scalar @{$x}); $i++) {
+            @{$x}[$i] = linalg::scalarmul($r, @{$x}[$i]);
+        }
+        return $x;
+    } else {
+        for (my $i = 0; $i < (scalar @{$x}); $i++) {
+            @{$x}[$i] *= $r;
+        }
+        return $x;
     }
-    return \@x;
 }
 
 ################################################################################
 
 sub scalaradd {
-    # Add an array to a scalar.
+    # Add an array or matrix to a scalar.
 
-    my @x;                                                               # array
+    my $x;                                                               # array
     my $r;                                                              # scalar
 
     # Determine the ordering of the inputs.
-    if ((ref $_[0]) && ! (ref $_[1])) {
-        @x = @{(shift)};
+    if (ref $_[0] && ! ref $_[1]) {
+        $x = linalg::copy(shift);
         $r = shift;
-    } elsif ((ref $_[1]) && ! (ref $_[0])) {
+    } elsif (ref $_[1] && ! ref $_[0]) {
         $r = shift;
-        @x = @{(shift)};
+        $x = linalg::copy(shift);
     } else {
-        die "\nImproper input.\n";
+        print STDERR "Improper input.\n"; die;
     }
     
-    # Add $r to each element of @x, then return @x.
-    my $n = scalar @x;
-    for (my $i = 0; $i < $n; $i++) {
-        $x[$i] += $r;
+    # Add each element of @x to $r, then return a pointer to @x.
+    if (ref @{$x}[0]) {
+        for (my $i = 0; $i < (scalar @{$x}); $i++) {
+            @{$x}[$i] = linalg::scalaradd($r, @{$x}[$i]);
+        }
+        return $x;
+    } else {
+        for (my $i = 0; $i < (scalar @{$x}); $i++) {
+            @{$x}[$i] += $r;
+        }
+        return $x;
     }
-    return \@x;
+}
+
+################################################################################
+
+sub test_scalaradd_scalarmul {
+    my $A = [[1,2,3], [4,5,6]];
+    linalg::printmat($A);
+    linalg::printmat(linalg::scalaradd($A, -1));
+    linalg::printmat(linalg::scalarmul($A, -1));
 }
 
 ################################################################################
@@ -385,9 +471,9 @@ sub hstack {
     # Make sure the operation is possible, given inputs $a and $b.
     my $numRows = scalar @{$a};
     if (! ref @{$a}[0] || ! ref @{$b}[0]) {
-        die "\nThis only works if both inputs are matrices.\n";
+        print STDERR "This only works if both inputs are matrices.\n"; die;
     } elsif ($numRows != (scalar @{$b})) {
-        die "\nMatrices must have same number of rows to stack horizontally.\n";
+        print STDERR "Matrices must have same number of rows to stack horizontally.\n"; die;
     }
     
     # Make and return the new stacked matrix.
@@ -410,7 +496,7 @@ sub vstack {
     
     # Check that the two inputs are valid.
     if (! ref @{$a}[0] || ! ref @{$b}[0]) {
-        die "\nThis only works if both inputs are matrices.\n";
+        print STDERR "This only works if both inputs are matrices.\n"; die;
     }
     
     # Make and return the new stacked matrix.
@@ -460,8 +546,10 @@ sub zeros {
             }
             push @z, \@tmp;
         }
+    } elsif ($nRows == 0 || $nCols == 0) {
+        # Do nothing;
     } else {
-        die "\nBad input.  Please try again.\n";
+        print STDERR "Bad input.  Please try again.\n"; die;
     }
     return \@z;
 }
@@ -473,6 +561,28 @@ sub test_zeros {
     my $z2 = linalg::zeros(3, 6);
     linalg::printmat($z1);
     linalg::printmat($z2);
+}
+
+################################################################################
+
+sub eye {
+    # Get an identity matrix.
+    
+    my $m = shift;               # number of rows and columns of identity matrix
+    
+    my $I = linalg::zeros($m, $m);
+    for (my $j = 0; $j < $m; $j++) {
+        @{@{$I}[$j]}[$j] = 1;
+    }
+    return $I;
+}
+
+################################################################################
+
+sub test_eye {
+    my $A = [[1,2,3], [4,5,6], [7,8,9]];
+    my $I = linalg::eye(scalar @{$A});
+    linalg::printmat(linalg::add($A, linalg::scalarmul(-1, $I)));
 }
 
 ################################################################################
@@ -518,7 +628,7 @@ sub add {
 
     if (! ref @{$x}[0] && ! ref @{$y}[0]) {
         if ((scalar @{$x}) != (scalar @{$y})) {
-            die "\nArrays must be the same size to be added together.\n";
+            print STDERR "Arrays must be the same size to be added together.\n"; die;
         }
         my $ne = scalar @{$x};
         my @z = @{$x};
@@ -528,9 +638,9 @@ sub add {
         return \@z;
     } elsif (ref @{$x}[0] && ref @{$y}[0]) {
         if ((scalar @{$x}) != (scalar @{$y})) {
-            die "\nMatrices must have same number of rows to be added together.\n";
+            print STDERR "Matrices must have same number of rows to be added together.\n"; die;
         } elsif ((scalar @{@{$x}[0]}) != (scalar @{@{$y}[0]})) {
-            die "\nMatrices must have same number of columns to be added together.\n";
+            print STDERR "Matrices must have same number of columns to be added together.\n"; die;
         }
         my $nr = scalar @{$x};
         my @z = @{$x};
@@ -539,7 +649,7 @@ sub add {
         }
         return \@z;
     } else {
-        die "\nInputs must either both be arrays or both be matrices.\n";
+        print STDERR "Inputs must either both be arrays or both be matrices.\n"; die;
     }
 }
 
@@ -575,7 +685,7 @@ sub dot {
 			print "\n";
 			print (scalar @{$y});
 			print "\n";
-            die "\nArrays must be the same length to be dotted.\n";
+            print STDERR "Arrays must be the same length to be dotted.\n"; die;
         }
         my $ne = scalar @{$x};
         my $dot = 0;
@@ -589,7 +699,7 @@ sub dot {
         if ($colsX != $rowsY) {
             print "\n\$colsX = $colsX\n";
             print "\n\$rowsY = $rowsY\n";
-            die "\nnCols of LHS matrix must equal length of RHS array..\n";
+            print STDERR "nCols of LHS matrix must equal length of RHS array..\n"; die;
         }
 		my $nRows = scalar @{$x};
         my $z = linalg::zeros($nRows);
@@ -603,7 +713,7 @@ sub dot {
         if ($colsX != $rowsY) {
             print "\n\$colsX = $colsX\n";
             print "\n\$rowsY = $rowsY\n";
-            die "\nnCols of first matrix must equal nRows of second matrix.\n";
+            print STDERR "nCols of first matrix must equal nRows of second matrix.\n"; die;
         }
         my $yT = linalg::transpose($y);
         my $nRows = scalar @{$x};
@@ -616,7 +726,7 @@ sub dot {
         }
         return $z;
     } else {
-        die "\nInputs must matrix-matrix, array-array, or matrix-array.\n";
+        print STDERR "Inputs must matrix-matrix, array-array, or matrix-array.\n"; die;
     }
 }
 
@@ -686,7 +796,7 @@ sub solve {
     my $nRows = scalar @{$A};
     my $nCols = scalar @{@{$A}[0]};
     if ($nRows != $nCols) {
-        die "\nPlease use a square matrix.\n";
+        print STDERR "Please use a square matrix.\n"; die;
     }
 
     # Apply row operations to get the matrix in upper triangular form.

@@ -138,7 +138,7 @@ sub rectangles {
         }
         
         # Quit if the minimum number of nodes gets small enough.
-        if ($minNodes <= (2 * $np)) {
+        if ($minNodes < (4 * $np)) {
             print ("$nSubd x $mSubd subdomains\n");
             return ($xmc, $ymc, $w, $ell);
         } else {

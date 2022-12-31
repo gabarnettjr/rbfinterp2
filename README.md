@@ -24,9 +24,9 @@ After each step in the instructions, I will try to give an example.
 * Create a subfolder of the coordinates folder for holding function values at the coordinates.
   * mkdir randomCoords\smoothData
 * Run three scripts to generate some nodes and function values.
-  * perl getRandomNodes.pl randomCoords
+  * perl getNodes.pl randomCoords
   * perl getEvalPts.pl randomCoords
-  * perl getSmoothData.pl randomCoords\smoothData
+  * perl getData.pl randomCoords\smoothData
 * Run the main script rbfinterp2.pl to interpolate and estimate function values at evaluation points.
   * perl rbfinterp2.pl randomCoords\smoothData y
     * Second input "y" means "yes", the true function IS available for comparison

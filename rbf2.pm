@@ -340,7 +340,7 @@ sub interp {
     } else {
         print STDERR "Please use either 0, 2, or 4 optional inputs.\n"; die;
     }
-    print ("RBF is r**$rbfPow, Polynomials up to degree $deg are included.\n");
+    print ("RBF is r**$rbfPow, polynomials up to degree $deg are included.\n");
     
     # Normalize coordinates for good conditioning.
     ($x, $y, $X, $Y) = rbf2::normalize($x, $y, $X, $Y);

@@ -13,9 +13,9 @@ node (x, y), then use g(xe,ye) to estimate f(xe,ye).
   * Install Anaconda
   * https://www.anaconda.com/
 ## Instructions
-After each step in the instructions, I will try to give an example.
+After each step in the instructions, I will explain how to do it.
 * Download and unzip the repository folder
-  * Push the green "Code" button and select "Download Zip"
+  * Push the green "Code" button and select "Download ZIP"
 * Open Anaconda Prompt
   * Press the Start button in windows, and begin typing "anaconda".  It should pop up.
 * Navigate to the folder where you saved this repo

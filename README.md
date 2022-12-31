@@ -9,7 +9,7 @@ node (x, y), then use g(xe,ye) to estimate f(xe,ye).
 * Perl
   * Install Strawberry Perl
   * https://strawberryperl.com/
-* Python, including numpy, matplotlib, and other packages.
+* Python (including numpy, matplotlib, and other packages)
   * Install Anaconda
   * https://www.anaconda.com/
 ## Instructions

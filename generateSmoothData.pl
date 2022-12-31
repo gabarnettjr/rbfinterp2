@@ -6,6 +6,9 @@
 # In order for this to work, you need to already have x.txt, y.txt, xe.txt, and
 # ye.txt saved in the folder at location $dataDir.
 
+# Greg Barnett
+# December 2022
+
 ################################################################################
 
 use strict;

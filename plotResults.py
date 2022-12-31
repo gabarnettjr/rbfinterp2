@@ -1,9 +1,12 @@
 """
 Creates one 2x2 array of subplots, each displaying some useful
-information about how well FG approximates errXY.  For comparison,
-the known values at the evaluation points must be given in errXYe.
+information about how well fe_approx approximates fe.  For comparison,
+the known values at the evaluation points must be given in fe.
+
+Greg Barnett
+December 2022
 """
-from sys import path, argv
+from sys import argv
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import tri as mtri
@@ -11,10 +14,12 @@ from matplotlib import tri as mtri
 import IO
 
 dataDir = argv[1]
-if argv[2] == "1" :
+if argv[2] == "y" :
     checkError = True
-else :
+elif argv[2] == "n" :
     checkError = False
+else :
+    exit("Please use either \"y\" or \"n\" for the second input.")
 
 ################################################################################
 
@@ -24,12 +29,12 @@ xe = IO.loadArray(dataDir + "\\..\\xe.txt")
 ye = IO.loadArray(dataDir + "\\..\\ye.txt")
 
 figNum = 1
-errXY = IO.loadArray(dataDir + "\\f.txt")
-FG = IO.loadArray(dataDir + "\\fe_approx.txt")
+f = IO.loadArray(dataDir + "\\f.txt")
+fe_approx = IO.loadArray(dataDir + "\\fe_approx.txt")
 if checkError :
-    errXYe = IO.loadArray(dataDir + "\\fe.txt")
+    fe = IO.loadArray(dataDir + "\\fe.txt")
 else :
-    errXYe = ()
+    fe = ()
 
 a = np.min(np.hstack((x, xe)))
 b = np.max(np.hstack((x, xe)))
@@ -83,7 +88,7 @@ else :
     plt.subplots_adjust(top=0.978, bottom=0.025, left=0.042, right=0.992 \
     , hspace=0.145, wspace=0.094)
 
-clevels = getContourLevels(np.hstack((errXY, FG, errXYe))  \
+clevels = getContourLevels(np.hstack((f, fe_approx, fe))  \
 , useMeanOf = np.array([0]), minDiff = 0, nColors = nc)
 
 # The known values on the nodes.
@@ -91,7 +96,7 @@ if checkError :
     ax = fig.add_subplot(221)
 else :
     ax = fig.add_subplot(121)
-cs = ax.tricontourf(triang, errXY, levels = clevels)
+cs = ax.tricontourf(triang, f, levels = clevels)
 if plotTriangles :
     for i in range(len(xt)) :
         ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
@@ -106,7 +111,7 @@ if checkError :
     ax = fig.add_subplot(222)
 else :
     ax = fig.add_subplot(122)
-cs = ax.tricontourf(TRIANG, FG, levels = clevels)
+cs = ax.tricontourf(TRIANG, fe_approx, levels = clevels)
 if plotTriangles :
     for i in range(len(xt)) :
         ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
@@ -121,7 +126,7 @@ if checkError :
 
     # The known values on the grid.
     ax = fig.add_subplot(223)
-    cs = ax.tricontourf(TRIANG, errXYe, levels = clevels)
+    cs = ax.tricontourf(TRIANG, fe, levels = clevels)
     if plotTriangles :
         for i in range(len(xt)) :
             ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
@@ -133,7 +138,7 @@ if checkError :
     plt.title("Known Values at Eval Pts")
 
     # The error relative to the known values on the grid.
-    tmp = (FG - errXYe) / np.max(np.abs(errXYe))
+    tmp = (fe_approx - fe) / np.max(np.abs(fe))
     clevels = getContourLevels(tmp \
     , useMeanOf = np.array([0]), minDiff = 0, nColors = nc)
 

@@ -4,6 +4,9 @@ package io;
 
 # Simple functions for loading or saving a single array as a *.txt file.
 
+# Greg Barnett
+# December 2022
+
 ################################################################################
 
 use strict;
@@ -32,7 +35,11 @@ sub saveArray {
         print STDERR "Unable to open file for writing.\n"; die;
     }
     foreach my $val (@{$values}) {
-        printf FILE "%1.15e\n", $val;
+		if ($val < 0) {
+			printf FILE "%1.15e\n", $val;
+		} else {
+			printf FILE " %1.15e\n", $val;
+		}
     }
     close FILE;
 }

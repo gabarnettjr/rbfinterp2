@@ -5,6 +5,9 @@
 # script will read the files x.txt and y.txt, and use their values to generate
 # a nice collection of corresponding evaluation points for testing.
 
+# Greg Barnett
+# December 2022
+
 ################################################################################
 
 use strict;

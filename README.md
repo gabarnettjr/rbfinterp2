@@ -23,13 +23,11 @@ After each step in the instructions, I will try to give an example.
   * mkdir randomCoords
 * Create a subfolder of the coordinates folder for holding function values at the coordinates.
   * mkdir randomCoords\smoothData
-* Run the script getRandomNodes.pl to generate some "random" nodes.
+* Run three scripts to generate some nodes and function values.
   * perl getRandomNodes.pl randomCoords
-* Run the script getEvalPts.pl to generate some evaluation points.
   * perl getEvalPts.pl randomCoords
-* Run the script getSmoothData.pl to sample a smooth function on your nodes.
   * perl getSmoothData.pl randomCoords\smoothData
-* Run the script rbfinterp2.pl to interpolate and estimate function values at the evaluation points.
+* Run the main script rbfinterp2.pl to interpolate and estimate function values at evaluation points.
   * perl rbfinterp2.pl randomCoords\smoothData y
     * Second input "y" means the true function IS available for comparison
   * perl rbfinterp2.pl randomCoords\smoothData n

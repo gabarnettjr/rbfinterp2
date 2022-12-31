@@ -61,6 +61,58 @@ sub normalize {
 
 ################################################################################
 
+sub jostle {
+	# Create "jostled" (not corners) Cartesian nodes, which are randomly moved.
+	
+	my $nx = shift;            # number of nodes going across (columns of nodes)
+	my $ny = shift;                 # number of nodes going down (rows of nodes)
+	my $alp = shift;                   # max proportion of node spacing for move
+	my $a = shift;                                               # left boundary
+	my $b = shift;                                              # right boundary
+	my $c = shift;                                             # bottom boundary
+	my $d = shift;                                                # top boundary
+	
+	my $xx = linalg::linspace($a, $b, $nx);
+	my $yy = linalg::linspace($c, $d, $ny);
+	($xx, $yy) = linalg::meshgrid($xx, $yy);
+	$xx = linalg::flatten($xx);
+	$yy = linalg::flatten($yy);
+	
+	my $eps = .001;
+	$alp = (($b - $a) / ($nx - 1) * $alp + ($d - $c) / ($ny - 1) * $alp) / 2;
+	
+	my $ne = scalar @{$xx};
+	
+	my ($i, $x, $y, $r);
+	
+	for ($i = 0; $i < $ne; $i++) {
+		$x = @{$xx}[$i];
+		$y = @{$yy}[$i];
+		if (($x > ($a + $eps)) && ($x < ($b - $eps)) && ($y > ($c + $eps))
+		&& ($y < ($d - $eps))) {
+			# Interior
+			$r = (-$alp + 2 * $alp * rand);
+			@{$xx}[$i] += $r;
+			$r = (-$alp + 2 * $alp * rand);
+			@{$yy}[$i] += $r;
+		} elsif ((($x < ($a + $eps)) || ($x > ($b - $eps))) && ($y > ($c + $eps))
+		&& ($y < ($d - $eps))) {
+			# Left and right boundaries, but no corners.
+			$r = (-$alp + 2 * $alp * rand);
+			@{$yy}[$i] += $r;
+		} elsif ((($y < ($c + $eps)) || ($y > ($d - $eps))) && ($x > ($a + $eps))
+		&& ($x < ($b - $eps))) {
+			# Top and bottom boundaries, but no corners.
+			$r = (-$alp + 2 * $alp * rand);
+			@{$xx}[$i] += $r;
+		}
+	}
+	
+	return ($xx, $yy);
+}
+
+################################################################################
+
 sub inrectangle {
     # Find index of all points that lie in a particular rectangular subdomain.
 

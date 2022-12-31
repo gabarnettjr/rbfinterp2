@@ -16,25 +16,30 @@ use warnings;
 use lib ".";
 use linalg;
 use io;
+use rbf2;
 
 ################################################################################
 
 # Process the input, if there is any.
 
-my ($coordsDir, $ne, $alp);
+my ($coordsDir, $nx, $ny, $alp);
 
 $coordsDir = "randomCoords";
-$ne = 50;
+$nx = 32;
+$ny = 32;
 $alp = 0;
 
 if (scalar @ARGV) {
     $coordsDir = shift;
 }
 if (scalar @ARGV) {
-    $ne = shift;
+    $nx = shift;
 }
 if (scalar @ARGV) {
-    $alp = shift;
+    $ny = shift;
+}
+if (scalar @ARGV) {
+	$alp = shift;
 }
 
 ################################################################################
@@ -47,35 +52,37 @@ my $b = linalg::max($x);
 my $c = linalg::min($y);
 my $d = linalg::max($y);
 
-my $xe = linalg::linspace($a, $b, $ne);
-my $ye = linalg::linspace($c, $d, $ne);
+my ($xe, $ye) = rbf2::jostle($nx, $ny, $alp, $a, $b, $c, $d);
 
-($xe, $ye) = linalg::meshgrid($xe, $ye);
-$xe = linalg::flatten($xe);
-$ye = linalg::flatten($ye);
+# my $xe = linalg::linspace($a, $b, $nx);
+# my $ye = linalg::linspace($c, $d, $ny);
 
-my $eps = .001;
-$alp = ($b - $a) / ($ne - 1) * $alp;
+# ($xe, $ye) = linalg::meshgrid($xe, $ye);
+# $xe = linalg::flatten($xe);
+# $ye = linalg::flatten($ye);
 
-$ne = scalar @{$xe};
+# my $eps = .001;
+# $alp = ($b - $a) / ($ne - 1) * $alp;
 
-# Jostle the Cartesian nodes (except corners) by a fraction of the node spacing.
-for (my $i = 0; $i < $ne; $i++) {
-    my $x = @{$xe}[$i];
-    my $y = @{$ye}[$i];
-    if (($x > ($a + $eps)) && ($x < ($b - $eps)) && ($y > ($c + $eps)) && ($y < ($d - $eps))) {
-        my $r = -$alp + 2 * $alp * rand;
-        @{$xe}[$i] += $r;
-        $r = -$alp + 2 * $alp * rand;
-        @{$ye}[$i] += $r;
-    } elsif ((($x < ($a + $eps)) || ($x > ($b - $eps))) && ($y > ($c + $eps)) && ($y < ($d - $eps))) {
-		my $r = -$alp + 2 * $alp * rand;
-		@{$ye}[$i] += $r;
-	} elsif ((($y < ($c + $eps)) || ($y > ($d - $eps))) && ($x > ($a + $eps)) && ($x < ($b - $eps))) {
-		my $r = -$alp + 2 * $alp * rand;
-		@{$xe}[$i] += $r;
-	}
-}
+# $ne = scalar @{$xe};
+
+# # Jostle the Cartesian nodes (except corners) by a fraction of the node spacing.
+# for (my $i = 0; $i < $ne; $i++) {
+    # my $x = @{$xe}[$i];
+    # my $y = @{$ye}[$i];
+    # if (($x > ($a + $eps)) && ($x < ($b - $eps)) && ($y > ($c + $eps)) && ($y < ($d - $eps))) {
+        # my $r = -$alp + 2 * $alp * rand;
+        # @{$xe}[$i] += $r;
+        # $r = -$alp + 2 * $alp * rand;
+        # @{$ye}[$i] += $r;
+    # } elsif ((($x < ($a + $eps)) || ($x > ($b - $eps))) && ($y > ($c + $eps)) && ($y < ($d - $eps))) {
+		# my $r = -$alp + 2 * $alp * rand;
+		# @{$ye}[$i] += $r;
+	# } elsif ((($y < ($c + $eps)) || ($y > ($d - $eps))) && ($x > ($a + $eps)) && ($x < ($b - $eps))) {
+		# my $r = -$alp + 2 * $alp * rand;
+		# @{$xe}[$i] += $r;
+	# }
+# }
 
 io::saveArray("$coordsDir\\xe.txt", $xe);
 io::saveArray("$coordsDir\\ye.txt", $ye);

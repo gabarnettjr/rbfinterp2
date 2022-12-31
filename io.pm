@@ -35,11 +35,7 @@ sub saveArray {
         print STDERR "Unable to open file for writing.\n"; die;
     }
     foreach my $val (@{$values}) {
-		if ($val < 0) {
-			printf FILE "%1.15e\n", $val;
-		} else {
-			printf FILE " %1.15e\n", $val;
-		}
+		printf FILE "%1.15e\n", $val;
     }
     close FILE;
 }

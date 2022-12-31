@@ -47,9 +47,9 @@ if (scalar @ARGV) {
 if (scalar @ARGV) {
     $checkError = shift;
 	$checkError = (lc $checkError);
-	if ($checkError =~ /y/) {
+	if (($checkError =~ /y/) && ($checkError !~ /n/)) {
 		$checkError = "y";
-	} elsif ($checkError =~ /n/) {
+	} elsif (($checkError =~ /n/) && ($checkError !~ /y/)) {
 		$checkError = "n";
 	} else {
 		print STDERR "Invalid second input (\$checkError).  Should be \"y\" or \"n\".\n"; die;

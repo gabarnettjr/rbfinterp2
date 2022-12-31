@@ -18,7 +18,7 @@ After each step in the instructions, I will try to give an example.
 * Open Anaconda Prompt
   * Press the Start button in windows, and begin typing "anaconda".  It should pop up.
 * Navigate to the folder where you saved this repo
-  * cd C:\Users\gabar\gitRepos\phsinterp2
+  * cd C:\Users\gabar\gitRepos\rbfinterp2
 * Create a new folder for holding coordinates
   * mkdir randomCoords
 * Create a subfolder of the coordinates folder for holding function values at the coordinates.

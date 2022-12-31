@@ -8,6 +8,9 @@ package linalg;
 # prefix "test_" are a good place to look for examples showing how to use this
 # package.
 
+# Greg Barnett
+# December 2022
+
 ################################################################################
 
 use strict;
@@ -183,7 +186,7 @@ sub test_absval {
 ################################################################################
 
 sub norm {
-    # Calculate the norm of a simple array (vector).
+    # Calculate the norm of a simple array (vector).  Default is 2-norm.
     
     my $x = shift;                                   # array to find the norm of
     my $type = shift;                             # type of norm (1,2,...,"inf")
@@ -197,7 +200,7 @@ sub norm {
         foreach my $r (@{$x}) {
             $n += ($r**$type);
         }
-        $n = $n**(1/$type);
+        $n = ($n ** (1/$type));
         return $n;
     }
 }
@@ -270,7 +273,7 @@ sub test_linspace {
 ################################################################################
 
 sub get {
-    # Get @x[@ind].
+    # Get @x at the indices contained in @ind.
 
     my $x = shift;                                             # array of values
     my $ind = shift;                                          # array of indices
@@ -293,7 +296,7 @@ sub get {
 ################################################################################
 
 sub set {
-    # Set @x[@ind] equal to @y.
+    # Set the values of @x at indices @ind equal to @y.
 
     my $x = shift;                                  # pointer to array of values
     my $ind = shift;                               # pointer to array of indices
@@ -301,7 +304,7 @@ sub set {
 
     # Check that the input is okay.
     if ((scalar @{$ind}) != (scalar @{$y})) {
-        print STDERR "Bad array lengths.\n"; die;
+        print STDERR "\@ind and \@y must be the same length.\n"; die;
     } elsif (! ref $x || ! ref $ind || ! ref $y) {
         print STDERR "All inputs should be references to arrays.\n"; die;
     } elsif (ref @{$x}[0] || ref @{$ind}[0] || ref @{$y}[0]) {
@@ -332,7 +335,10 @@ sub test_get_set {
 ################################################################################
 
 sub meshgrid {
-    # Create matrices @xx and @yy based on arrays @x and @y.
+    # Create matrices @xx and @yy based on arrays @x and @y.  @x is repeated and
+	# stacked vertically, while @y is repeated and stacked horizontally.  In the
+	# end, the output matrices xx and yy should have numRows = len(y) and
+	# numCols = len(x).
 
     my $x = shift;                                # pointer to array of x-coords
     my $y = shift;                                # pointer to array of y-coords
@@ -342,7 +348,7 @@ sub meshgrid {
     
     # Check that the input is appropriate.
     if (ref @{$x}[0] || ref @{$y}[0]) {
-        print STDERR "This only works when both inputs are simple arrays.\n"; die;
+        print STDERR "\@x and \@y must both be simple arrays.\n"; die;
     }
 
     # Repeat @x vertically, @y horizontally, and return pointers to matrices.
@@ -381,7 +387,7 @@ sub flatten {
     
     # Make sure that the input is a matrix.
     if (! ref @{$A}[0]) {
-        print STDERR "Only a matrix can be flattened.\n"; die;
+        print STDERR "Only a matrix can be flattened, not an array.\n"; die;
     }
 
     # Push each row of matrix @A onto array @x, then return @x.
@@ -409,7 +415,7 @@ sub scalarmul {
         $r = shift;
         $x = linalg::copy(shift);
     } else {
-        print STDERR "Improper input.\n";  die;
+        print STDERR "One input should be an array, the other a scalar.\n";  die;
     }
     
     # Multiply each element of @x by $r, then return a pointer to @x.
@@ -442,7 +448,7 @@ sub scalaradd {
         $r = shift;
         $x = linalg::copy(shift);
     } else {
-        print STDERR "Improper input.\n"; die;
+        print STDERR "One input should be an array, the other a scalar.\n";  die;
     }
     
     # Add each element of @x to $r, then return a pointer to @x.
@@ -555,7 +561,7 @@ sub zeros {
             push @z, \@tmp;
         }
     } elsif ($nRows == 0 || $nCols == 0) {
-        # Do nothing;
+        # Do nothing.
     } else {
         print STDERR "Bad input.  Please try again.\n"; die;
     }
@@ -565,8 +571,10 @@ sub zeros {
 ################################################################################
 
 sub test_zeros {
+	my $z0 = linalg::zeros(0);
     my $z1 = linalg::zeros(5);
     my $z2 = linalg::zeros(3, 6);
+	linalg::printmat($z0);
     linalg::printmat($z1);
     linalg::printmat($z2);
 }
@@ -574,7 +582,7 @@ sub test_zeros {
 ################################################################################
 
 sub eye {
-    # Get an identity matrix.
+    # Get a square identity matrix, which is all zeros except ones on diagonal.
     
     my $m = shift;               # number of rows and columns of identity matrix
     
@@ -636,7 +644,7 @@ sub add {
 
     if (! ref @{$x}[0] && ! ref @{$y}[0]) {
         if ((scalar @{$x}) != (scalar @{$y})) {
-            print STDERR "Arrays must be the same size to be added together.\n"; die;
+            print STDERR "Arrays must be the same length to be added together.\n"; die;
         }
         my $ne = scalar @{$x};
         my @z = @{$x};
@@ -650,9 +658,9 @@ sub add {
         } elsif ((scalar @{@{$x}[0]}) != (scalar @{@{$y}[0]})) {
             print STDERR "Matrices must have same number of columns to be added together.\n"; die;
         }
-        my $nr = scalar @{$x};
+        my $nRows = scalar @{$x};
         my @z = @{$x};
-        for (my $i = 0; $i < $nr; $i++) {
+        for (my $i = 0; $i < $nRows; $i++) {
             $z[$i] = linalg::add(@{$x}[$i], @{$y}[$i]);
         }
         return \@z;
@@ -682,10 +690,12 @@ sub test_add {
 ################################################################################
 
 sub dot {
-    # Compute the dot product of arrays or matrices.
+    # Compute the dot product of arrays or matrices.  Note that simple arrays
+	# are considered to be column vectors.  To calculate the dot product of a
+	# row vector x and a matrix A, instead get the dot product of A^t with x^t.
 
-    my $x = shift;                                                # first matrix
-    my $y = shift;                                               # second matrix
+    my $x = shift;                                       # first array or matrix
+    my $y = shift;                                      # second array or matrix
 
     if (! ref @{$x}[0] && ! ref @{$y}[0]) {
         if ((scalar @{$x}) != (scalar @{$y})) {
@@ -768,7 +778,7 @@ sub printmat {
             }
             print "\n";
         } else {
-            printf "%10.7f ", $row;
+            printf "%8.5f ", $row;
         }
     }
     print "\n";
@@ -798,16 +808,15 @@ sub solve {
     # Solve the linear system @A*@x=@b, with matrix @A and array @b known.
 
     my $A = linalg::copy(shift);                          # the square matrix @A
-    my @b = @{(shift)};                                           # the array @b
-    my $b = \@b;
+    my $b = linalg::copy(shift);                                  # the array @b
 
     my $nRows = scalar @{$A};
     my $nCols = scalar @{@{$A}[0]};
-    if ($nRows != $nCols) {
-        print STDERR "Please use a square matrix.\n"; die;
+    if ($nRows != $nCols || $nRows != (scalar @{$b})) {
+        print STDERR "A should be square.  Rows(A) should equal len(b).\n"; die;
     }
 
-    # Apply row operations to get the matrix in upper triangular form.
+    # Apply row operations to transform A to upper triangular form.
     for (my $j = 0; $j < $nCols - 1; $j++) {
         # Find largest element in leftmost column, and make this the pivot row.
         # Apparently, this is important, because when I was not doing this, I
@@ -834,7 +843,7 @@ sub solve {
         }
     }
 
-    # Use back substitution to solve for @x.
+    # Use back substitution to finish solving for @x.
     my $x = $b;
     @{$x}[$nRows-1] = @{$b}[$nRows-1] / @{@{$A}[$nRows-1]}[$nRows-1];
     my $k = $nRows;

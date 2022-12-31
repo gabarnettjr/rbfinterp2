@@ -2,6 +2,27 @@
 
 package rbf2;
 
+# This package contains subroutines for two-dimensional RBF interpolation using
+# polyharmonic spline (PHS) radial basis functions (RBFs), together with
+# standard polynomial functions up to some degree.  The main function is called
+# "interp", but it uses the other functions to achieve a local, yet accurate
+# approximation.  In the typical situation, the user will have nodes (x, y), and
+# corresponding known function values f.  The goal is to use these known values
+# to predict the value of the function on some other set of points (xe, ye),
+# called "evaluation points".  If the user is not interested in the details,
+# then they can use the interp function by passing in only five inputs:
+# x, y, f, xe, ye.
+# The smallest rectangle that contains all nodes (x,y) will become the overall
+# computational domain.  If the user does not supply extra inputs, then the
+# domain will automatically be broken into a number of rectangular subdomains,
+# So that many smaller "local" interpolation problems can be solved, instead of
+# finding one large "global" interpolant.
+
+# Greg Barnett
+# December 2022
+
+################################################################################
+
 use strict;
 use warnings;
 
@@ -159,14 +180,13 @@ sub polymat {
 
     my $n = scalar @{$x};
     my @p = ();
-
     for (my $i = 0; $i < $n; $i++) {
         my @tmp = ();
         push @p, \@tmp;
     }
 
-    if ($deg < -1 || $deg > 4) {
-        print STDERR "Use a polynomial degree from -1 (no poly) up to 4, please.\n"; die;
+    if ($deg < 0 || $deg > 4) {
+        print STDERR "Use a polynomial degree from 0 (constant) up to 4, please.\n"; die;
     }
 
     for (my $i = 0; $i < $n; $i++) {
@@ -233,7 +253,8 @@ sub rbfmat {
     my $A = linalg::zeros($nRows, $nCols);
     for (my $i = 0; $i < $nRows; $i++) {
         for (my $j = 0; $j < $nCols; $j++) {
-            @{@{$A}[$i]}[$j] = rbf2::phs(@{$x}[$i] - @{$xc}[$j], @{$y}[$i] - @{$yc}[$j], $rbfPow);
+            @{@{$A}[$i]}[$j] = rbf2::phs(@{$x}[$i] - @{$xc}[$j]
+			, @{$y}[$i] - @{$yc}[$j], $rbfPow);
         }
     }
     
@@ -255,7 +276,7 @@ sub interp {
     if ((scalar @_) == 2 || (scalar @_) == 4) {
         $rbfPow = shift;                                   # exponent of phs rbf
         $deg = shift;                       # largest polynomial degree in basis
-        if ((scalar @_)) {
+        if (scalar @_) {
             $nSubd = shift;                  # number of subdomains horizontally
             $mSubd = shift;                    # number of subdomains vertically
         }
@@ -279,8 +300,6 @@ sub interp {
     }
 
     # Set up a few helper variables.
-    my $ELL = (3 * $ell);
-    my $W = (3 * $w);
     my $numP = int (($deg + 1) * ($deg + 2) / 2);
     my $zp1 = linalg::zeros($numP);
     my $zp2 = linalg::zeros($numP, $numP);
@@ -290,7 +309,7 @@ sub interp {
     for (my $i = 0; $i < $nSubdomains; $i++) {
         
         # Get all nodes in the rectangular subdomain or adjacent subdomains.
-        my $ind = rbf2::inrectangle($x, $y, @{$xmc}[$i], @{$ymc}[$i], $ELL, $W);
+        my $ind = rbf2::inrectangle($x, $y, @{$xmc}[$i], @{$ymc}[$i], 3*$ell, 3*$w);
         if ((scalar @{$ind}) < int (1.5 * $numP)) {
             print ("numLocalNodes = " . (scalar @{$ind}) . "\n");
             print STDERR "Not enough data for this polynomial degree.\n"; die;
@@ -309,7 +328,7 @@ sub interp {
         $p = linalg::hstack(linalg::transpose($p), $zp2);
         $A = linalg::vstack($A, $p);
         
-        # Get function values and solve for coefficients.
+        # Get function values and solve for coefficients, $lam.
         my $lam = linalg::get($f, $ind);
 		push @{$lam}, @{$zp1};
         $lam = linalg::solve($A, $lam);

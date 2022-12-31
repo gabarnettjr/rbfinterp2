@@ -37,24 +37,24 @@ my $ye = io::loadArray("$dataDir\\..\\ye.txt");
 
 ################################################################################
 
-# sub eff {
-    # my ($x, $y) = @_;
-    # my $z = linalg::zeros(scalar @{$x});
-    # for (my $i = 0; $i < (scalar @{$x}); $i++) {
-        # @{$z}[$i] = cos(2*pi * @{$x}[$i] / 25000) * sin(2*pi * @{$y}[$i] / 25000);
-    # }
-    # return $z;
-# }
-
 sub eff {
     my ($x, $y) = @_;
     my $z = linalg::zeros(scalar @{$x});
     for (my $i = 0; $i < (scalar @{$x}); $i++) {
-        @{$z}[$i] = cos(2*pi * @{$x}[$i] / 25000) * cos(2*pi * @{$y}[$i] / 25000)
-                  + sin(2*pi * @{$x}[$i] / 25000) * sin(2*pi * @{$y}[$i] / 25000);
+        @{$z}[$i] = cos(2*pi * @{$x}[$i] / 25000) * sin(2*pi * @{$y}[$i] / 25000);
     }
     return $z;
 }
+
+# sub eff {
+    # my ($x, $y) = @_;
+    # my $z = linalg::zeros(scalar @{$x});
+    # for (my $i = 0; $i < (scalar @{$x}); $i++) {
+        # @{$z}[$i] = cos(2*pi * @{$x}[$i] / 25000) * cos(2*pi * @{$y}[$i] / 25000)
+                  # + sin(2*pi * @{$x}[$i] / 25000) * sin(2*pi * @{$y}[$i] / 25000);
+    # }
+    # return $z;
+# }
 
 # sub eff {
     # my ($x, $y) = @_;

@@ -111,7 +111,7 @@ if plotTriangles :
     for i in range(len(xt)) :
         ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
 ax.plot(x, y, 'ko', markersize = ms)
-# ax.plot(xe, ye, 'r.', markersize = ms/2)
+ax.plot(xe, ye, 'r.', markersize = ms/2)
 ax.axis('image')
 ax.axis(box)
 fig.colorbar(cs)

@@ -30,5 +30,7 @@ After each step in the instructions, I will try to give an example.
 * Run the script getSmoothData.pl to sample a smooth function on your nodes.
   * perl getSmoothData.pl randomCoords\smoothData
 * Run the script rbfinterp2.pl to interpolate and estimate function values at the evaluation points.
-  * perl rbfinterp2.pl randomCoords\smoothData y ("y" means the true function IS available for comparison)
-  * perl rbfinterp2.pl randomCoords\smoothData n ("n" means the true function is NOT available for comparison)
+  * perl rbfinterp2.pl randomCoords\smoothData y
+    * "y" means the true function IS available for comparison
+  * perl rbfinterp2.pl randomCoords\smoothData n
+    * "n" means the true function is NOT available for comparison

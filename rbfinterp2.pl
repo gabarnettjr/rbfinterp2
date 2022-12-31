@@ -39,10 +39,19 @@ if (scalar @ARGV) {
         goto HELP;
     }
     $dataDir = shift;
-    $checkError = 0;
+    $checkError = "n";
 }
 if (scalar @ARGV) {
     $checkError = shift;
+	$checkError = (lc $checkError);
+	if ($checkError =~ /y/) {
+		$checkError = 1;
+	} elsif ($checkError =~ /n/) {
+		$checkError = 0;
+	} else {
+		print "Invalid input for \$checkError.  Should be \"y\" or \"n\".";
+		goto HELP;
+	}
 }
 if (scalar @ARGV) {
     $rbfPow = shift;
@@ -61,7 +70,7 @@ if (scalar @ARGV) {
     my $s = "\nPlease use up to six inputs.\n";
     $s .= "(1) The first input is the folder containing input function data.\n";
     $s .= "(2) The second input is whether or not to calculate the error,\n";
-    $s .= "    where 1 means calculate the error, and 0 means don\'t.\n";
+    $s .= "    where \"y\" means calculate the error, and \"n\" means don\'t.\n";
     $s .= "(3) The third input is the rbf exponent (default 3).\n";
     $s .= "(4) The fourth input is the polynomial degree (default 1).\n";
     $s .= "(5) The fifth input is number of subdomains across (default auto calculate).\n";

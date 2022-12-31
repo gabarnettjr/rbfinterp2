@@ -4,19 +4,21 @@ package rbf2;
 
 # This package contains subroutines for two-dimensional RBF interpolation using
 # polyharmonic spline (PHS) radial basis functions (RBFs), together with
-# standard polynomial functions up to some degree.  The main function is called
-# "interp", but it uses the other functions to achieve a local, yet accurate
+# polynomial functions up to a specified degree.  The main subroutine is called
+# "interp", but it uses the other subroutines to achieve a local, yet accurate
 # approximation.  In the typical situation, the user will have nodes (x, y), and
 # corresponding known function values f.  The goal is to use these known values
 # to predict the value of the function on some other set of points (xe, ye),
-# called "evaluation points".  If the user is not interested in the details,
-# then they can use the interp function by passing in only five inputs:
+# called "evaluation points".  If the user is not interested in adjusting
+# parameters, then they can use the interp function by passing in five inputs:
 # x, y, f, xe, ye.
 # The smallest rectangle that contains all nodes (x,y) will become the overall
 # computational domain.  If the user does not supply extra inputs, then the
 # domain will automatically be broken into a number of rectangular subdomains,
-# So that many smaller "local" interpolation problems can be solved, instead of
-# finding one large "global" interpolant.
+# so that many small "local" interpolation problems can be solved rather than
+# one large "global" problem.  The main computational effort is solving for the
+# coefficients that determine how much of each basis function are needed to
+# match the function values at the nodes.
 
 # Greg Barnett
 # December 2022

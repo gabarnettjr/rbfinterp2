@@ -16,7 +16,7 @@ node (x, y), then use g(xe,ye) to estimate f(xe,ye).
 After each step in the instructions, I will try to give an example.
 * Download and unzip the repository folder
 * Open Anaconda Prompt
-  * Press the start button and begin typing "anaconda".  It should pop up.
+  * Press the Start button in windows, and begin typing "anaconda".  It should pop up.
 * Navigate to the folder where you saved this repo
   * cd C:\Users\gabar\gitRepos\phsinterp2
 * Create a new folder for holding coordinates

@@ -29,6 +29,4 @@ After each step in the instructions, I will try to give an example.
   * perl getSmoothData.pl randomCoords\smoothData
 * Run the main script rbfinterp2.pl to interpolate and estimate function values at evaluation points.
   * perl rbfinterp2.pl randomCoords\smoothData y
-    * Second input "y" means the true function IS available for comparison
-  * perl rbfinterp2.pl randomCoords\smoothData n
-    * Second input "n" means the true function is NOT available for comparison
+    * Second input "y" means "yes", the true function IS available for comparison

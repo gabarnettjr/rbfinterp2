@@ -13,7 +13,8 @@ node, then estimate f(xe,ye) by evaluating g(xe,ye).
   * Install Anaconda
   * https://www.anaconda.com/
 ## Instructions
-Here are some instructions for how to test out this repo.  After some of the instructions, I will give an example.
+Here are some instructions for how to use the scripts in this repo.\
+After each step in the instructions, I will try to give an example.
 * Download and unzip the repository folder
 * Open Anaconda Prompt
   * Press the start button and start typing "anaconda".  It should pop up.

@@ -27,7 +27,7 @@ After each step in these instructions, there will be an example.
 * Run three scripts to generate some nodes and function values.
   * perl getNodes.pl randomCoords
   * perl getEvalPts.pl randomCoords
-  * perl getFuncVals.pl randomCoords\smoothData
+  * perl getFunctionValues.pl randomCoords\smoothData
 * Run the main script rbfinterp2.pl to interpolate and estimate function values at evaluation points.
   * perl rbfinterp2.pl randomCoords\smoothData y
     * Second input "y" means "yes", the true function IS available for comparison.

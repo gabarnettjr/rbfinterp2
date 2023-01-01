@@ -56,11 +56,14 @@ def getContourLevels(vals, useMeanOf = (), minDiff = 0, nColors = 64) :
     """
     Get the z-values to be used to make the contour levels in the 2D surf plots.
     """
-    if len(useMeanOf) == 0 :
-        useMeanOf = vals
-    m = np.mean(useMeanOf)
-    D = np.max([np.max(vals) - m, m - np.min(vals), minDiff])
-    clevels = np.linspace(m - D, m + D, nColors + 1)
+    # if len(useMeanOf) == 0 :
+        # useMeanOf = vals
+    # m = np.mean(useMeanOf)
+    # D = np.max([np.max(vals) - m, m - np.min(vals), minDiff])
+    # clevels = np.linspace(m - D, m + D, nColors + 1)
+    m = np.min(vals)
+    M = np.max(vals)
+    clevels = np.linspace(m, M, nColors + 1)
     return clevels
 
 ################################################################################

@@ -13,6 +13,8 @@ from matplotlib import tri as mtri
 
 import IO
 
+plotTriangles = True
+
 dataDir = argv[1]
 if argv[2] == "y" :
     checkError = True
@@ -46,11 +48,11 @@ TRIANG = mtri.Triangulation(xe, ye)                          # evaluation points
 ms = 1                                                             # marker size
 nc = 9                                                        # number of colors
 box = [a, b, c, d]                                             # plotting window
-lw = .1
+lw = .1                                                             # line width
 
 ################################################################################
 
-def getContourLevels(vals, useMeanOf = (), minDiff = 2, nColors = 64) :
+def getContourLevels(vals, useMeanOf = (), minDiff = 0, nColors = 64) :
     """
     Get the z-values to be used to make the contour levels in the 2D surf plots.
     """
@@ -65,15 +67,16 @@ def getContourLevels(vals, useMeanOf = (), minDiff = 2, nColors = 64) :
 
 # Get vertices of triangles, which will be plotted over and over again.
 
+# Stack first triangle vertex at the end, so entire triangle is plotted.
 tmp = np.hstack((triang.triangles[0], triang.triangles[0][0]))
+
+# Get x and y coordinates at the indices of each triangle in the triangulation.
 xt = x[tmp]
 yt = y[tmp]
 for i in range(1, len(triang.triangles)) :
     tmp = np.hstack((triang.triangles[i], triang.triangles[i][0]))
     xt = np.vstack((xt, x[tmp]))
     yt = np.vstack((yt, y[tmp]))
-    
-plotTriangles = True
     
 ################################################################################
 
@@ -88,8 +91,8 @@ else :
     plt.subplots_adjust(top=0.978, bottom=0.025, left=0.042, right=0.992 \
     , hspace=0.145, wspace=0.094)
 
-clevels = getContourLevels(np.hstack((f, fe_approx, fe))  \
-, useMeanOf = np.array([0]), minDiff = 0, nColors = nc)
+clevels = getContourLevels(np.hstack((f, fe_approx, fe)), nColors = nc)
+# , useMeanOf = np.array([0]), minDiff = 0, nColors = nc)
 
 # The known values on the nodes.
 if checkError :
@@ -139,8 +142,8 @@ if checkError :
 
     # The error relative to the known values on the grid.
     tmp = (fe_approx - fe) / np.max(np.abs(fe))
-    clevels = getContourLevels(tmp \
-    , useMeanOf = np.array([0]), minDiff = 0, nColors = nc)
+    clevels = getContourLevels(tmp, nColors = nc)
+    # , useMeanOf = np.array([0]), minDiff = 0, nColors = nc)
 
     ax = fig.add_subplot(224)
     cs = ax.tricontourf(TRIANG, tmp, levels = clevels)

@@ -3,7 +3,7 @@ Local interpolation of data (x, y, f(x,y)) using polyharmonic spline (PHS) radia
 Assuming that your data comes from some underlying (possibly unknown) function f, the goal of\
 approximation is to estimate f(xe,ye), where (xe, ye) are so-called "evaluation points".  More specifically,\
 the goal of interpolation (one type of approximation) is to construct a function g that matches f at every\
-node (x, y), then use g(xe,ye) to estimate f(xe,ye).
+node (x, y), so that g(xe,ye) can be used as an estimate for f(xe,ye).
 ## Requirements
 * Windows
 * Perl

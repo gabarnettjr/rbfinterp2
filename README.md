@@ -13,14 +13,14 @@ node (x, y), so that g(xe,ye) can be used as an estimate for f(xe,ye).
   * Install Anaconda
   * https://www.anaconda.com/
 ## Instructions
-After each step in these instructions, there will be an example of how to do it.
+After each step in these instructions, there will be an example.
 * Download and unzip the repository folder.
   * Push the green "Code" button and select "Download ZIP".
 * Open Anaconda Prompt.
   * Press the Start Button in windows, and begin typing "anaconda".  It should pop up.
 * Navigate to the folder where you saved this repository.
   * cd C:\Users\gabar\gitRepos\rbfinterp2
-* Create a new folder for holding coordinates (nodes and evaluation points)
+* Create a new folder for holding coordinates (nodes and evaluation points).
   * mkdir randomCoords
 * Create a subfolder of the coordinates folder to store function values at the nodes.
   * mkdir randomCoords\smoothData
@@ -30,4 +30,4 @@ After each step in these instructions, there will be an example of how to do it.
   * perl getFuncVals.pl randomCoords\smoothData
 * Run the main script rbfinterp2.pl to interpolate and estimate function values at evaluation points.
   * perl rbfinterp2.pl randomCoords\smoothData y
-    * Second input "y" means "yes", the true function IS available for comparison
+    * Second input "y" means "yes", the true function IS available for comparison.

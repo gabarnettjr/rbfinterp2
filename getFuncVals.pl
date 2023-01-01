@@ -56,7 +56,8 @@ sub f {
 		$z = (cos 2*pi * $x / 50000) * (cos 2*pi * $y / 50000)
 	       + (sin 2*pi * $x / 50000) * (sin 2*pi * $y / 50000);
 	} elsif ($f eq "i") {
-		$z = exp -(1/10000)**2 * (($x - 17000)**2 + ($y - 32000)**2);
+		$z = (exp -(1/8000)**2 * (($x - 10000)**2 + ($y - 35000)**2))
+		   + (exp -(1/8000)**2 * (($x - 32000)**2 + ($y - 5000)**2));
 	} else {
 		print STDERR "Invalid choice for \$f.  Choose f, g, or h.\n"; die;
 	}

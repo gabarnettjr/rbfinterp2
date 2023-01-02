@@ -570,13 +570,54 @@ sub zeros {
 
 ################################################################################
 
-sub test_zeros {
+sub setrand {
+    # Set values of an array or matrix to random numbers between 0 and 1.
+
+	my $x = shift;               # pointer to the array or matrix to be modified
+	my $a = 0;                                       # min val of random numbers
+	my $b = 1;                                       # max val of random numbers
+	if (scalar @_) { $a = shift; }
+	if (scalar @_) { $b = shift; }
+	
+    my $nRows = (scalar @{$x});
+	my $nCols = "";
+	if (ref @{$x}[0]) {
+		$nCols = (scalar @{@{$x}[0]});
+	}
+
+    # Check if it is an array or matrix, based on the number of inputs,
+    # then assign the values to the array or matrix.
+    if ($nRows && ! $nCols) {
+        for (my $i = 0; $i < $nRows; $i++) {
+            @{$x}[$i] = ($a + ($b - $a) * rand);
+        }
+    } elsif ($nRows && $nCols) {
+        for (my $i = 0; $i < $nRows; $i++) {
+            for (my $j = 0; $j < $nCols; $j++) {
+                @{@{$x}[$i]}[$j] = ($a + ($b - $a) * rand);
+            }
+        }
+    } elsif ($nRows == 0 || $nCols == 0) {
+        # Do nothing.
+    } else {
+        print STDERR "Bad input.  Please try again.\n"; die;
+    }
+    return $x;
+}
+
+################################################################################
+
+sub test_zeros_setrand {
 	my $z0 = linalg::zeros(0);
     my $z1 = linalg::zeros(5);
     my $z2 = linalg::zeros(3, 6);
 	linalg::printmat($z0);
     linalg::printmat($z1);
     linalg::printmat($z2);
+	my $r1 = linalg::setrand($z1, -1, 1);
+	my $r2 = linalg::setrand($z2, 0, 20);
+	linalg::printmat($r1);
+	linalg::printmat($r2);
 }
 
 ################################################################################
@@ -751,16 +792,33 @@ sub dot {
 ################################################################################
 
 sub test_dot {
-	# Make a 2x3 matrix @A.
-    my $A = [[1,2,3], [4,5,6]];
-	# Make a 3x4 matrix @B.
-    my $B = [[2,3,4,5], [3,4,5,6], [4,5,6,7]];
-	# See what @A and @B look like.
-	linalg::printmat($A);
-	linalg::printmat($B);
-	# Find the product of @A and @B.
-	my $C = linalg::dot($A, $B);
-	linalg::printmat($C);
+	if ((shift @_) eq "speed") {
+		my $iter = 100;
+		my $m = 500;
+		my $n = 1000;
+		my $A = linalg::zeros($m, $n);
+		my $x = linalg::zeros($n);
+		my ($i, $b);
+		my $computeTime = time;
+		for ( $i = 0; $i < $iter; $i++) {
+			$A = linalg::setrand($A, -1, 1);
+			$x = linalg::setrand($x, -1, 1);
+			$b = linalg::dot($A, $x);
+		}
+		$computeTime = time - $computeTime;
+		print "$computeTime\n";
+	} else {
+		# Make a 2x3 matrix @A.
+		my $A = [[1,2,3], [4,5,6]];
+		# Make a 3x4 matrix @B.
+		my $B = [[2,3,4,5], [3,4,5,6], [4,5,6,7]];
+		# See what @A and @B look like.
+		linalg::printmat($A);
+		linalg::printmat($B);
+		# Find the product of @A and @B.
+		my $C = linalg::dot($A, $B);
+		linalg::printmat($C);
+	}
 }
 
 ################################################################################
@@ -861,22 +919,38 @@ sub solve {
 ################################################################################
 
 sub test_solve {
-    # Make up a matrix @A.
-    my $A = [[1,2,1], [4,5,2], [1,8,3]];
-    # Make up a vector @b.
-    my $b = [9, 3, 2];
-    # Solve the system.
-    my $x = linalg::solve($A, $b);
-    # Test if it worked.
-    print "\@A =\n";
-    linalg::printmat($A);
-    print "\@x = ";
-    linalg::printmat($x);
-    my $prod = dot($A, $x);
-    print "\@A\*\@x = ";
-    linalg::printmat($prod);
-    print "\@b    = ";
-    linalg::printmat($b);
+	if ((shift @_) eq "speed") {
+		my $iter = 100;
+		my $n = 100;
+		my $A = linalg::zeros($n, $n);
+		my $b = linalg::zeros($n, 1);
+		my ($i, $x);
+		my $computeTime = time;
+		for ($i = 0; $i < $iter; $i++) {
+			linalg::setrand($A, -1, 1);
+			linalg::setrand($b, -1, 1);
+			$x = linalg::solve($A, $b);
+		}
+		$computeTime = time - $computeTime;
+		print "$computeTime\n";
+	} else {
+		# Make up a matrix @A.
+		my $A = [[1,2,1], [4,5,2], [1,8,3]];
+		# Make up a vector @b.
+		my $b = [9, 3, 2];
+		# Solve the system.
+		my $x = linalg::solve($A, $b);
+		# Test if it worked.
+		print "\@A =\n";
+		linalg::printmat($A);
+		print "\@x = ";
+		linalg::printmat($x);
+		my $prod = dot($A, $x);
+		print "\@A\*\@x = ";
+		linalg::printmat($prod);
+		print "\@b    = ";
+		linalg::printmat($b);
+	}
 }
 
 ################################################################################

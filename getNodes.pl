@@ -32,29 +32,21 @@ $c = 0;
 $d = 50000;
 
 if (scalar @ARGV) {
-    $coordsDir = shift;
+	$coordsDir = shift;
+	if (! -d $coordsDir) {
+		print STDERR "First input must be a coordinates directory.\n"; die;
+	} elsif ((! -e "$coordsDir\\x.txt") || (! -e "$coordsDir\\y.txt")
+	|| (! -e "$coordsDir\\xe.txt") || (! -e "$coordsDir\\ye.txt")) {
+		print STDERR "Coordinates directory must contain coordinates.\n"; die;
+	}
 }
-if (scalar @ARGV) {
-    $nx = shift;
-}
-if (scalar @ARGV) {
-	$ny = shift;
-}
-if (scalar @ARGV) {
-    $alp = shift;
-}
-if (scalar @ARGV) {
-	$a = shift;
-}
-if (scalar @ARGV) {
-	$b = shift;
-}
-if (scalar @ARGV) {
-	$c = shift;
-}
-if (scalar @ARGV) {
-	$d = shift;
-}
+if (scalar @ARGV) { $nx = shift; }
+if (scalar @ARGV) { $ny = shift; }
+if (scalar @ARGV) { $alp = shift; }
+if (scalar @ARGV) { $a = shift; }
+if (scalar @ARGV) { $b = shift; }
+if (scalar @ARGV) { $c = shift; }
+if (scalar @ARGV) { $d = shift; }
 
 ################################################################################
 

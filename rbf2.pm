@@ -147,7 +147,7 @@ sub rectangles {
     my $xe = shift;                                       # x-coords of eval pts
     my $ye = shift;                                       # y-coords of eval pts
     my ($nSubd, $mSubd, $deg);
-    $nSubd = $mSubd = $deg = "";
+    $nSubd = $mSubd = $deg = -1;
     if ((scalar @_) == 2) {
         $nSubd = shift;                      # number of subdomains horizontally
         $mSubd = shift;                        # number of subdomains vertically
@@ -169,7 +169,7 @@ sub rectangles {
     
     # Initial number of subdomains across and down is small.
     my $np;
-    if ($deg ne "") {
+    if ($deg != -1) {
         if (linalg::norm(\@cd, "inf") > linalg::norm(\@ab, "inf")) {
             $nSubd = 2;
             $mSubd = int (linalg::norm(\@cd, "inf") / linalg::norm(\@ab, "inf") * 2);
@@ -198,7 +198,7 @@ sub rectangles {
         my $ell = ($d - $c + 2*$eps) / $mSubd / 2;
         
         # If nSubd and mSubd are function inputs, then return the results now.
-        if ($deg eq "") {
+        if ($deg == -1) {
             print ("$nSubd x $mSubd subdomains\n");
             return ($xmc, $ymc, $w, $ell);
         }
@@ -347,7 +347,7 @@ sub interp {
     
     # Info (coords, half-width, half-length) about the rectangular subdomains.
     my ($xmc, $ymc, $w, $ell);
-    if ($nSubd && $mSubd) {
+    if (($nSubd != -1) && ($mSubd != -1)) {
         ($xmc, $ymc, $w, $ell) = rbf2::rectangles($x, $y, $X, $Y, $nSubd, $mSubd);
     } else {
         ($xmc, $ymc, $w, $ell) = rbf2::rectangles($x, $y, $X, $Y, $deg);
@@ -389,6 +389,7 @@ sub interp {
         
         # Find evaluation points in the rectangular subdomain.
         my $IND = rbf2::inrectangle($X, $Y, @{$xmc}[$i], @{$ymc}[$i], $ell, $w);
+		if (! (scalar @{$IND})) { next; }
         my $XIND = linalg::get($X, $IND);
         my $YIND = linalg::get($Y, $IND);
         

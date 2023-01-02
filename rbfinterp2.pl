@@ -28,20 +28,27 @@ use rbf2;
 
 ################################################################################
 
+# Process the input.
+
 my ($dataDir, $checkError, $rbfPow, $deg, $nSubd, $mSubd);
 
 $dataDir = "cdCoords\\smoothData";
 $checkError = "y";
 $rbfPow = 3;
 $deg = 1;
-$nSubd = "";
-$mSubd = "";
+$nSubd = -1;
+$mSubd = -1;
 
 if (scalar @ARGV) {
     if ((lc $ARGV[0]) =~ /^\-\-help$|^\-h$|^help$|^h$/) {
         print helpString(); exit;
     }
     $dataDir = shift;
+	if (! -d $dataDir) {
+		print STDERR "First input must be a data directory.\n"; die;
+	} elsif (! -e "$dataDir\\f.txt") {
+		print STDERR "Data directory must contain function values.\n"; die;
+	}
     $checkError = "n";
 }
 if (scalar @ARGV) {
@@ -55,48 +62,40 @@ if (scalar @ARGV) {
 		print STDERR "Invalid second input (\$checkError).  Should be \"y\" or \"n\".\n"; die;
 	}
 }
-if (scalar @ARGV) {
-    $rbfPow = shift;
-}
-if (scalar @ARGV) {
-    $deg = shift;
-}
-if (scalar @ARGV) {
-    $nSubd = shift;
-}
-if (scalar @ARGV) {
-    $mSubd = shift;
-}
+if (scalar @ARGV) { $rbfPow = shift; }
+if (scalar @ARGV) { $deg = shift; }
+if (scalar @ARGV) { $nSubd = shift; }
+if (scalar @ARGV) { $mSubd = shift; }
 if (scalar @ARGV) {
 	print STDERR "Too many inputs.  Max number of inputs is 6.\n"; die;
 }
 
 ################################################################################
 
-# Start the timer for loading/computing/saving in perl.
-my $computeTime = time;
-
 # Load the data at the nodes (where you know the function).
 my $x = io::loadArray("$dataDir\\..\\x.txt");
 my $y = io::loadArray("$dataDir\\..\\y.txt");
 my $f = io::loadArray("$dataDir\\f.txt");
 
-# Load the evaluation points (where you WANT to know the function).
+################################################################################
+
+# USE PERL:
 my $xe = io::loadArray("$dataDir\\..\\xe.txt");
 my $ye = io::loadArray("$dataDir\\..\\ye.txt");
+my $computeTime = time;
+my $fe_approx = rbf2::interp($x, $y, $f, $xe, $ye, $rbfPow, $deg, $nSubd, $mSubd);
+$computeTime = time - $computeTime;
+print "\$computeTime = $computeTime\n";
+io::saveArray("$dataDir\\fe_approx.txt", $fe_approx);
+
+# # USE JULIA:
+# # Interpolate using polyharmonic spline (PHS) radial basis functions (RBFs).
+# system "julia julia\\rbfinterp2.jl $dataDir $rbfPow $deg $nSubd $mSubd";
 
 ################################################################################
 
-# Interpolate using polyharmonic spline (PHS) radial basis functions (RBFs).
-my $fe_approx = rbf2::interp($x, $y, $f, $xe, $ye
-, $rbfPow, $deg, $nSubd, $mSubd);
-
-# Save the interpolated values.
-io::saveArray("$dataDir\\fe_approx.txt", $fe_approx);
-
 # Print the compute time.
-$computeTime = time - $computeTime;
-print "\$computeTime = $computeTime\n";
+
 
 # Use python to visualize the results.
 system "python plotResults.py $dataDir $checkError";

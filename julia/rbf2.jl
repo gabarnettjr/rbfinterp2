@@ -28,10 +28,10 @@ using LinearAlgebra
 
 function rbf2_meshgrid(x, y)
     # Create matrices xx and yy based on arrays x and y.  x is repeated and
-	# stacked vertically, while y is repeated and stacked horizontally.  In the
-	# end, the output matrices xx and yy should have numRows = len(y) and
-	# numCols = len(x).
-
+    # stacked vertically, while y is repeated and stacked horizontally.  In the
+    # end, the output matrices xx and yy should have numRows = len(y) and
+    # numCols = len(x).
+    
     # x                                                          array of x-vals
     # y                                                          array of y-vals
     

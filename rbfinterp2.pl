@@ -32,7 +32,7 @@ use rbf2;
 
 my ($dataDir, $checkError, $rbfPow, $deg, $nSubd, $mSubd);
 
-$dataDir = "cdCoords\\smoothData";
+$dataDir = "randCoords\\smoothData";
 $checkError = "y";
 $rbfPow = 3;
 $deg = 1;
@@ -72,14 +72,12 @@ if (scalar @ARGV) {
 
 ################################################################################
 
-# Load the data at the nodes (where you know the function).
-my $x = io::loadArray("$dataDir\\..\\x.txt");
-my $y = io::loadArray("$dataDir\\..\\y.txt");
-my $f = io::loadArray("$dataDir\\f.txt");
-
-################################################################################
+# Interpolate using polyharmonic spline (PHS) radial basis functions (RBFs).
 
 # USE PERL:
+my $x  = io::loadArray("$dataDir\\..\\x.txt");
+my $y  = io::loadArray("$dataDir\\..\\y.txt");
+my $f  = io::loadArray("$dataDir\\f.txt");
 my $xe = io::loadArray("$dataDir\\..\\xe.txt");
 my $ye = io::loadArray("$dataDir\\..\\ye.txt");
 my $computeTime = time;
@@ -89,7 +87,6 @@ print "\$computeTime = $computeTime\n";
 io::saveArray("$dataDir\\fe_approx.txt", $fe_approx);
 
 # # USE JULIA:
-# # Interpolate using polyharmonic spline (PHS) radial basis functions (RBFs).
 # system "julia julia\\rbfinterp2.jl $dataDir $rbfPow $deg $nSubd $mSubd";
 
 ################################################################################

@@ -1,13 +1,11 @@
 # windows
 
-# Uses julia to do the actual calculations for interpolation, for sake of speed.
+# Uses julia to do the actual calculations for interpolation.
 
 # Greg Barnett
 # January 2023
 
 ################################################################################
-
-using DelimitedFiles
 
 include("io.jl")
 include("rbf2.jl")

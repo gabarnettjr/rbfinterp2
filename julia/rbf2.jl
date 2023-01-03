@@ -362,7 +362,7 @@ function rbf2_interp(x, y, f, xe, ye; rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1)
         
         # Find evaluation points in the rectangular subdomain.
         IND = rbf2_inrectangle(xe, ye, xmc[i], ymc[i], ell, w)
-		if length(ind) == 0;  next;  end;
+		if length(IND) == 0;  next;  end;
         xeIND = xe[IND]
         yeIND = ye[IND]
         

@@ -87,12 +87,12 @@ print "\$computeTime = $computeTime\n";
 io::saveArray("$dataDir\\fe_approx.txt", $fe_approx);
 
 # # USE JULIA:
-# system "julia julia\\rbfinterp2.jl $dataDir $rbfPow $deg $nSubd $mSubd";
+# system "julia .\\julia\\rbfinterp2.jl $dataDir $rbfPow $deg $nSubd $mSubd";
+
+# # USE PYTHON:
+# system "python .\\python\\rbfinterp2.py $dataDir $rbfPow $deg $nSubd $mSubd";
 
 ################################################################################
-
-# Print the compute time.
-
 
 # Use python to visualize the results.
 system "python plotResults.py $dataDir $checkError";

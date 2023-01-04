@@ -78,7 +78,7 @@ sub jostle {
 	$xx = linalg::flatten($xx);
 	$yy = linalg::flatten($yy);
 	
-	my $eps = .001;
+	my $eps = .0001 * (($b - $a) + ($d - $c)) / 2;
 	$alp = (($b - $a) / ($nx - 1) * $alp + ($d - $c) / ($ny - 1) * $alp) / 2;
 	
 	my $ne = scalar @{$xx};
@@ -172,19 +172,19 @@ sub rectangles {
     if ($deg != -1) {
         if (linalg::norm(\@cd, "inf") > linalg::norm(\@ab, "inf")) {
             $nSubd = 2;
-            $mSubd = int (linalg::norm(\@cd, "inf") / linalg::norm(\@ab, "inf") * 2);
+            $mSubd = int (linalg::norm(\@cd, "inf") / linalg::norm(\@ab, "inf") * 2 + .5);
         } else {
             $mSubd = 2;
-            $nSubd = int (linalg::norm(\@ab, "inf") / linalg::norm(\@cd, "inf") * 2);
+            $nSubd = int (linalg::norm(\@ab, "inf") / linalg::norm(\@cd, "inf") * 2 + .5);
         }
         # Number of polynomial functions.
-        $np = int (($deg + 1) * ($deg + 2) / 2);
+        $np = int (($deg + 1) * ($deg + 2) / 2 + .5);
     }
     
     while ("true") {
 
         # (xmc,ymc) are coordinates of the center of each rectangular subdomain.
-        my $eps = 0.001;
+        my $eps = .0001 * (($b - $a) + ($d - $c)) / 2;
         my $dx = ($b - $a + 2*$eps) / $nSubd;
         my $dy = ($d - $c + 2*$eps) / $mSubd;
         my $xmc = linalg::linspace($a - $eps + $dx/2, $b + $eps - $dx/2, $nSubd);
@@ -217,8 +217,8 @@ sub rectangles {
             print ("$nSubd x $mSubd subdomains\n");
             return ($xmc, $ymc, $w, $ell);
         } else {
-            $nSubd++;
-            $mSubd++;
+            $nSubd += 1;
+            $mSubd += 1;
         }
     }
 }
@@ -354,7 +354,7 @@ sub interp {
     }
 
     # Set up a few helper variables.
-    my $numP = int (($deg + 1) * ($deg + 2) / 2);
+    my $numP = int (($deg + 1) * ($deg + 2) / 2 + .5);
     my $zp1 = linalg::zeros($numP);
     my $zp2 = linalg::zeros($numP, $numP);
     my $F = linalg::zeros(scalar @{$X});
@@ -364,7 +364,7 @@ sub interp {
         
         # Get all nodes in the rectangular subdomain or adjacent subdomains.
         my $ind = rbf2::inrectangle($x, $y, @{$xmc}[$i], @{$ymc}[$i], 3*$ell, 3*$w);
-        if ((scalar @{$ind}) < int (1.5 * $numP)) {
+        if ((scalar @{$ind}) < int (1.5 * $numP + .5)) {
             print ("numLocalNodes = " . (scalar @{$ind}) . "\n");
             print STDERR "Not enough data for this polynomial degree.\n"; die;
         }

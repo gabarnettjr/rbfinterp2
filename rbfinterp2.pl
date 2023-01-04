@@ -74,6 +74,10 @@ if (scalar @ARGV) {
 
 # Interpolate using polyharmonic spline (PHS) radial basis functions (RBFs).
 
+if (-e "$dataDir\\fe_approx.txt") {
+	unlink "$dataDir\\fe_approx.txt";
+}
+
 # USE PERL:
 my $x  = io::loadArray("$dataDir\\..\\x.txt");
 my $y  = io::loadArray("$dataDir\\..\\y.txt");
@@ -91,6 +95,10 @@ io::saveArray("$dataDir\\fe_approx.txt", $fe_approx);
 
 # # USE PYTHON:
 # system "python .\\python\\rbfinterp2.py $dataDir $rbfPow $deg $nSubd $mSubd";
+
+if (! -e "$dataDir\\fe_approx.txt") {
+	print STDERR "Please investigate error during fe_approx.txt creation.\n"; die;
+}
 
 ################################################################################
 

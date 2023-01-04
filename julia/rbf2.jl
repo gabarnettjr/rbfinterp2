@@ -129,7 +129,6 @@ function rbf2_inrectangle(x, y, xmci, ymci, ell, w)
     # w                                           width of rectangular subdomain
 
     ind = []
-    n = length(x)
 
     for j in 1 : length(x)
         if abs(x[j] - xmci) <= w

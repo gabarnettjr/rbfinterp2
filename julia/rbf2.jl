@@ -238,11 +238,8 @@ function rbf2_polymat(x, y, deg)
         error("Use a polynomial degree from 0 (constant) up to 4, please.\n")
     end
     
-    p = []
+    p = ones(size(x))
 
-    if deg >= 0
-        p = ones(size(x))
-    end
     if deg >= 1
         p = hcat(p, x, y)
     end

@@ -31,8 +31,6 @@ if (scalar @ARGV) {
 	$dataDir = shift;
 	if (! -d $dataDir) {
 		print STDERR "First input must be a data directory.\n"; die;
-	} elsif (! -e "$dataDir\\f.txt") {
-		print STDERR "Data directory must contain function values.\n"; die;
 	}
 }
 if (scalar @ARGV) { $ftype = (lc shift); }

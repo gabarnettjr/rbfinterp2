@@ -35,9 +35,6 @@ if (scalar @ARGV) {
 	$coordsDir = shift;
 	if (! -d $coordsDir) {
 		print STDERR "First input must be a coordinates directory.\n"; die;
-	} elsif ((! -e "$coordsDir\\x.txt") || (! -e "$coordsDir\\y.txt")
-	|| (! -e "$coordsDir\\xe.txt") || (! -e "$coordsDir\\ye.txt")) {
-		print STDERR "Coordinates directory must contain coordinates.\n"; die;
 	}
 }
 if (scalar @ARGV) { $nx = shift; }

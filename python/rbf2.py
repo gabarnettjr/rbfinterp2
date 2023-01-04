@@ -71,7 +71,7 @@ def jostle(nx, ny, alp, a, b, c, d) :
     xx = xx.flatten()
     yy = yy.flatten
     
-    eps = .001
+    eps = 0.0001 * ((b - a) + (d - c)) / 2
     alp = ((b - a) / (nx - 1) * alp + (d - c) / (ny - 1) * alp) / 2
     
     ne = len(xx)
@@ -108,13 +108,12 @@ def inrectangle(x, y, xmci, ymci, ell, w) :
     # ell                                        length of rectangular subdomain
     # w                                           width of rectangular subdomain
 
-    ind = np.array([], int)
-    n = len(x)
+    ind = []
 
     for j in range(len(x)) :
-        if np.abs(x[j] - xmci) <= w :
-            if np.abs(y[j] - ymci) <= ell :
-                ind = np.hstack((ind, np.array([j], int)))
+        if abs(x[j] - xmci) <= w :
+            if abs(y[j] - ymci) <= ell :
+                ind.append(j)
     
     return ind
 
@@ -157,11 +156,11 @@ def rectangles(x, y, xe, ye, nSubd=-1, mSubd=-1, deg=-1) :
     while True :
 
         # (xmc,ymc) are coordinates of the center of each rectangular subdomain.
-        eps = 0.001
+        eps = 0.0001 * ((b - a) + (d - c)) / 2
         dx = (b - a + 2*eps) / nSubd
         dy = (d - c + 2*eps) / mSubd
-        xmc = np.arange(a - eps + dx/2, b + eps + dx/2, dx)
-        ymc = np.arange(c - eps + dy/2, d + eps + dy/2, dx)
+        xmc = np.linspace(a - eps + dx/2, b + eps - dx/2, nSubd)
+        ymc = np.linspace(c - eps + dy/2, d + eps - dy/2, mSubd)
         xmc, ymc = np.meshgrid(xmc, ymc)
         xmc = xmc.flatten()
         ymc = ymc.flatten()
@@ -202,10 +201,8 @@ def polymat(x, y, deg) :
     if (deg < 0) or (deg > 4) :
         raise ValueError("Use a polynomial degree from 0 (constant) up to 4, please.\n")
     
-    p = np.array([])
-
-    if deg >= 0 :
-        p = np.ones(np.shape(x))
+    p = np.ones(np.shape(x))
+    
     if deg >= 1 :
         p = np.vstack((p, x, y))
     if deg >= 2 :
@@ -226,7 +223,7 @@ def phs(x, y, rbfPow) :
     # y                                                        y-coords of input
     # rbfPow                                             exponent in the phs rbf
 
-    return (x ** 2 + y ** 2) ** (rbfPow/2)
+    return (x**2 + y**2) ** (rbfPow/2)
 
 ################################################################################
 
@@ -267,7 +264,7 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
     if (rbfPow == -1) and (deg == -1) :
         rbfPow = 3
         deg = 1
-    print('RBF is r^{0:1d}, polynomials up to degree {1:1d} are included.\n'.format(rbfPow, deg))
+    print('RBF is r**{0:1d}, polynomials up to degree {1:1d} are included.\n'.format(rbfPow, deg))
     
     # Normalize coordinates for good conditioning.
     x, y, xe, ye = normalize(x, y, xe, ye)
@@ -275,27 +272,28 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
     # Info (coords, half-width, half-length) about the rectangular subdomains.
     if (nSubd != -1) and (mSubd != -1) :
         xmc, ymc, w, ell = rectangles(x, y, xe, ye, nSubd=nSubd, mSubd=mSubd)
-    else :
+    elif deg != -1 :
         xmc, ymc, w, ell = rectangles(x, y, xe, ye, deg=deg)
+    else :
+        raise ValueError("Need either (nSubd,mSubd) or deg, or both.\n")
     
     # Set up a few helper variables.
     numP = int(round((deg + 1) * (deg + 2) / 2))
     zp1 = np.zeros((numP, 1))
     zp2 = np.zeros((numP, numP))
     fe_approx = np.zeros(len(xe))
-    nSubdomains = len(xmc)
     
-    for i in range(nSubdomains) :
+    for i in range(len(xmc)) :
          
          # Get all nodes in the rectangular subdomain or adjacent subdomains.
          ind = inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)
          if len(ind) < int(round(1.5 * numP)) :
-             print('numLocalNodes = {0:2i}\n'.format(len(ind)))
+             print('numLocalNodes = {0:2d}\n'.format(len(ind)))
              raise ValueError("Not enough data for this polynomial degree.\n")
          xind = x[ind]
          yind = y[ind]
          
-         # Make the polynomial matrix (tall and skinny).
+         # Make the polynomial matrix.
          p = polymat(xind, yind, deg)
          
          # Make the rbf matrix (square).
@@ -321,10 +319,10 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
          
          # Get rbf-poly evaluation matrix.
          A = rbfmat(xeIND, yeIND, xind, yind, rbfPow)
-         p = polymat(xeIND, yeIND, deg)
+         p = polymat(xeIND, yeIND, deg).T
          
          # Evaluate the interpolant at the evaluation points in the subdomain.
-         fe_approx[IND] = np.hstack((A, p.T)).dot(lam).flatten()
+         fe_approx[IND] = np.hstack((A, p)).dot(lam).flatten()
     
     return fe_approx
 

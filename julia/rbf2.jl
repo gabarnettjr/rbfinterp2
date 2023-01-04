@@ -88,7 +88,7 @@ function rbf2_jostle(nx, ny, alp, a, b, c, d)
 	xx = xx'[:]
 	yy = yy'[:]
 	
-	eps = .001
+	eps = .0001 * ((b - a) + (d - c)) / 2
 	alp = ((b - a) / (nx - 1) * alp + (d - c) / (ny - 1) * alp) / 2
 	
 	ne = length(xx)
@@ -186,7 +186,7 @@ function rbf2_rectangles(x, y, xe, ye; nSubd=-1, mSubd=-1, deg=-1)
     while true
 
         # (xmc,ymc) are coordinates of the center of each rectangular subdomain.
-        eps = 0.001
+        eps = .0001 * ((b - a) + (d - c)) / 2 
         dx = (b - a + 2*eps) / nSubd
         dy = (d - c + 2*eps) / mSubd
         xmc = range(a - eps + dx/2, b + eps - dx/2, length=nSubd)
@@ -322,8 +322,10 @@ function rbf2_interp(x, y, f, xe, ye; rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1)
     # Info (coords, half-width, half-length) about the rectangular subdomains.
     if (nSubd != -1) && (mSubd != -1)
         (xmc, ymc, w, ell) = rbf2_rectangles(x, y, xe, ye; nSubd=nSubd, mSubd=mSubd)
-    else
+    elseif (deg != -1)
         (xmc, ymc, w, ell) = rbf2_rectangles(x, y, xe, ye; deg=deg)
+	else
+		error("Need (nSubd,mSubd) or deg, or both.\n")
     end
 
     # Set up a few helper variables.

@@ -235,7 +235,7 @@ sub polymat {
     my $n = scalar @{$x};
     my @p = ();
     for (my $i = 0; $i < $n; $i++) {
-        my @tmp = ();
+        my @tmp = (1);
         push @p, \@tmp;
     }
 
@@ -244,9 +244,6 @@ sub polymat {
     }
 
     for (my $i = 0; $i < $n; $i++) {
-        if ($deg >= 0) {
-            push @{$p[$i]}, 1;
-        }
         my $xi = @{$x}[$i];
         my $yi = @{$y}[$i];
         if ($deg >= 1) {

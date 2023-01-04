@@ -13,7 +13,6 @@ node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used as an estimate for
   * Install Anaconda
   * https://www.anaconda.com/
 ## Instructions
-After each step in these instructions, there will be an example.
 * Download and unzip the repository folder.
   * Push the green "Code" button and select "Download ZIP".
 * Open Anaconda Prompt.

@@ -23,17 +23,20 @@ sub copy {
 
     my $A = shift;                            # pointer to what you want to copy
 
-    my @B;
     if (ref @{$A}[0]) {
-        @B = ();
-        foreach my $row (@{$A}) {
-            my @tmp = @{$row};
-            push @B, \@tmp;
+        my $nRows = (scalar @{$A});
+        my $nCols = (scalar @{@{$A}[0]});
+        my $B = linalg::zeros($nRows, $nCols);
+        for (my $i = 0; $i < $nRows; $i++) {
+            for (my $j = 0; $j < $nCols; $j++) {
+                @{@{$B}[$i]}[$j] = @{@{$A}[$i]}[$j];
+            }
         }
+        return $B;
     } else {
-        @B = @{$A};
+        my @B = @{$A};
+        return \@B;
     }
-    return \@B;
 }
 
 ################################################################################
@@ -286,11 +289,13 @@ sub get {
     }
 
     # Get values and return them in an array.
-    my @xind = ();
+    my $xind = linalg::zeros(scalar @{$ind});
+    my $j = 0;
     foreach my $i (@{$ind}) {
-        push @xind, @{$x}[$i];
+        @{$xind}[$j] = @{$x}[$i];
+        $j++;
     }
-    return \@xind;
+    return $xind;
 }
 
 ################################################################################
@@ -540,25 +545,27 @@ sub test_hstack_vstack {
 ################################################################################
 
 sub zeros {
-    # Create an array or matrix of zeros.
+    # Create an array or matrix which has the specified dimensions.
 
     my $nRows = shift;                                  # desired number of rows
     my $nCols = shift;                               # desired number of columns
 
     # Check if it is an array or matrix, based on the number of inputs,
     # then create the array/matrix of zeros, @z.
-    my @z = ();
+    my @z;
+    $#z = ($nRows - 1);
     if ($nRows && ! $nCols) {
         for (my $i = 0; $i < $nRows; $i++) {
-            push @z, 0;
+            $z[$i] = 0;
         }
     } elsif ($nRows && $nCols) {
         for (my $i = 0; $i < $nRows; $i++) {
-            my @tmp = ();
+            my @tmp;
+            $#tmp = ($nCols - 1);
             for (my $j = 0; $j < $nCols; $j++) {
-                push @tmp, 0;
+                $tmp[$j] = 0;
             }
-            push @z, \@tmp;
+            $z[$i] = \@tmp;
         }
     } elsif ($nRows == 0 || $nCols == 0) {
         # Do nothing.

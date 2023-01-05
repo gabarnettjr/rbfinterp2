@@ -18,25 +18,145 @@ use warnings;
 
 ################################################################################
 
+sub alloc {
+    # Allocate memory for an array or matrix that has the specified dimensions.
+
+    my $nRows = shift;                                  # desired number of rows
+    my $nCols = shift;                               # desired number of columns
+
+    # Check if it is an array or matrix, based on the number of inputs,
+    # then create the array/matrix of zeros, @z.
+    my @z;
+    if ($nRows && $nCols) {
+        $#z = ($nRows - 1);
+        for (my $i = 0; $i < $nRows; $i++) {
+            my @tmp;
+            $#tmp = ($nCols - 1);
+            $z[$i] = \@tmp;
+        }
+    } elsif ($nRows && ! $nCols) {
+        $#z = ($nRows - 1);
+    } else {
+        print STDERR "Bad input.  Please try again.\n"; die;
+    }
+
+    return \@z;
+}
+
+################################################################################
+
+sub zeros {
+    # Create an array or matrix filled with zeros (slower than alloc).
+
+    my $nRows = shift;                                  # desired number of rows
+    my $nCols = shift;                               # desired number of columns
+
+    if ($nRows && $nCols) {
+        my $z = linalg::alloc($nRows, $nCols);
+        for (my $i = 0; $i < $nRows; $i++) {
+            for (my $j = 0; $j < $nCols; $j++) {
+                @{@{$z}[$i]}[$j] = 0;
+            }
+        }
+        return $z;
+    } elsif ($nRows && ! $nCols) {
+        my $z = linalg::alloc($nRows);
+        for (my $i = 0; $i < $nRows; $i++) {
+            @{$z}[$i] = 0;
+        }
+        return $z;
+    } else {
+        print STDERR "Bad input.  Please try again.\n"; die;
+    }
+}
+
+################################################################################
+
+sub setrand {
+    # Set values of an array or matrix to random numbers between 0 and 1.
+
+	my $x = shift;               # pointer to the array or matrix to be modified
+	my $a = 0;                                       # min val of random numbers
+	my $b = 1;                                       # max val of random numbers
+	if (scalar @_) { $a = shift; }
+	if (scalar @_) { $b = shift; }
+	
+    my $nRows = (scalar @{$x});
+	my $nCols = "";
+	if (ref @{$x}[0]) {
+		$nCols = (scalar @{@{$x}[0]});
+	}
+
+    # Check if it is an array or matrix, based on the number of inputs,
+    # then assign the values to the array or matrix.
+    if ($nRows && ! $nCols) {
+        for (my $i = 0; $i < $nRows; $i++) {
+            @{$x}[$i] = ($a + ($b - $a) * rand);
+        }
+    } elsif ($nRows && $nCols) {
+        for (my $i = 0; $i < $nRows; $i++) {
+            for (my $j = 0; $j < $nCols; $j++) {
+                @{@{$x}[$i]}[$j] = ($a + ($b - $a) * rand);
+            }
+        }
+    } elsif ($nRows == 0 || $nCols == 0) {
+        # Do nothing.
+    } else {
+        print STDERR "Bad input.  Please try again.\n"; die;
+    }
+    return $x;
+}
+
+################################################################################
+
+sub test_alloc_setrand {
+    if ((scalar @_) && ($_[0] eq "speed")) {
+        my $m = 10000;
+        my $n = 10000;
+        my $computeTime = time;
+        my $z = linalg::alloc($m, $n);
+        $computeTime = time - $computeTime;
+        print $computeTime;
+    } else {
+        my $z1 = linalg::zeros(5);
+        my $z2 = linalg::zeros(3, 6);
+        linalg::printmat($z1);
+        linalg::printmat($z2);
+        unlink $z1, $z2;
+        $z1 = linalg::alloc(5);
+        $z2 = linalg::alloc(3, 6);
+        my $r1 = linalg::setrand($z1, -1, 1);
+        my $r2 = linalg::setrand($z2, 0, 20);
+        linalg::printmat($r1);
+        linalg::printmat($r2);
+    }
+}
+
+################################################################################
+
 sub copy {
     # Copy a matrix or array.  This only happens by defaut for arrays in perl.
 
     my $A = shift;                            # pointer to what you want to copy
 
+    my $nRows = scalar @{$A};
+    my $B;
     if (ref @{$A}[0]) {
-        my $nRows = (scalar @{$A});
-        my $nCols = (scalar @{@{$A}[0]});
-        my $B = linalg::zeros($nRows, $nCols);
+        my $nCols = scalar @{@{$A}[0]};
+        $B = linalg::alloc($nRows, $nCols);
         for (my $i = 0; $i < $nRows; $i++) {
             for (my $j = 0; $j < $nCols; $j++) {
                 @{@{$B}[$i]}[$j] = @{@{$A}[$i]}[$j];
             }
         }
-        return $B;
     } else {
-        my @B = @{$A};
-        return \@B;
+        $B = linalg::alloc($nRows);
+        for (my $i = 0; $i < $nRows; $i++) {
+            @{$B}[$i] = @{$A}[$i];
+        }
     }
+
+    return $B;
 }
 
 ################################################################################
@@ -163,15 +283,15 @@ sub absval {
                 $x[$i] = -$x[$i];
             }
         }
-        return \@x;
     } else {
         # Get the absolute value of each row in the matrix.
         my $n = scalar @x;
         for (my $i = 0; $i < $n; $i++) {
             $x[$i] = linalg::absval($x[$i]);
         }
-        return \@x;
     }
+
+    return \@x;
 }
 
 ################################################################################
@@ -289,7 +409,7 @@ sub get {
     }
 
     # Get values and return them in an array.
-    my $xind = linalg::zeros(scalar @{$ind});
+    my $xind = linalg::alloc(scalar @{$ind});
     my $j = 0;
     foreach my $i (@{$ind}) {
         @{$xind}[$j] = @{$x}[$i];
@@ -428,13 +548,13 @@ sub scalarmul {
         for (my $i = 0; $i < (scalar @{$x}); $i++) {
             @{$x}[$i] = linalg::scalarmul($r, @{$x}[$i]);
         }
-        return $x;
     } else {
         for (my $i = 0; $i < (scalar @{$x}); $i++) {
             @{$x}[$i] *= $r;
         }
-        return $x;
     }
+
+    return $x;
 }
 
 ################################################################################
@@ -461,13 +581,13 @@ sub scalaradd {
         for (my $i = 0; $i < (scalar @{$x}); $i++) {
             @{$x}[$i] = linalg::scalaradd($r, @{$x}[$i]);
         }
-        return $x;
     } else {
         for (my $i = 0; $i < (scalar @{$x}); $i++) {
             @{$x}[$i] += $r;
         }
-        return $x;
     }
+
+    return $x;
 }
 
 ################################################################################
@@ -496,13 +616,28 @@ sub hstack {
     }
     
     # Make and return the new stacked matrix.
-    my @c = ();
-    for (my $i = 0; $i < $numRows; $i++) {
-        my @tmp = @{@{$a}[$i]};
-        push @tmp, @{@{$b}[$i]};
-        push @c, \@tmp;
+    my $nRows = scalar @{$a};
+    my $nColsA = scalar @{@{$a}[0]};
+    my $nColsB = scalar @{@{$b}[0]};
+    my $c = linalg::alloc($nRows, $nColsA + $nColsB);
+    for (my $i = 0; $i < $nRows; $i++) {
+        for (my $j = 0; $j < $nColsA; $j++) {
+            @{@{$c}[$i]}[$j] = @{@{$a}[$i]}[$j];
+        }
+        for (my $j = $nColsA; $j < $nColsA + $nColsB; $j++) {
+            @{@{$c}[$i]}[$j] = @{@{$b}[$i]}[$j-$nColsA];
+        }
     }
-    return \@c;
+    return $c;
+
+    # # Make and return the new stacked matrix.
+    # my @c = ();
+    # for (my $i = 0; $i < $numRows; $i++) {
+    #     my @tmp = @{@{$a}[$i]};
+    #     push @tmp, @{@{$b}[$i]};
+    #     push @c, \@tmp;
+    # }
+    # return \@c;
 }
 
 ################################################################################
@@ -510,17 +645,36 @@ sub hstack {
 sub vstack {
     # Stack two matrices vertically.
 
-    my $a = linalg::copy(shift);                       # pointer to first matrix
-    my $b = linalg::copy(shift);                      # pointer to second matrix
+    my $a = shift;                                     # pointer to first matrix
+    my $b = shift;                                    # pointer to second matrix
     
     # Check that the two inputs are valid.
     if (! ref @{$a}[0] || ! ref @{$b}[0]) {
         print STDERR "This only works if both inputs are matrices.\n"; die;
+    } elsif ((scalar @{@{$a}[0]}) != (scalar @{@{$b}[0]})) {
+        print STDERR "Matrices must have same number of columns to stack vertically.\n"; die;
     }
-    
+
     # Make and return the new stacked matrix.
-    push @{$a}, @{$b};
-    return $a;
+    my $nRowsA = scalar @{$a};
+    my $nRowsB = scalar @{$b};
+    my $nCols = scalar @{@{$a}[0]};
+    my $c = linalg::alloc($nRowsA  + $nRowsB, $nCols);
+    for (my $i = 0; $i < $nRowsA; $i++) {
+        for (my $j = 0; $j < $nCols; $j++) {
+            @{@{$c}[$i]}[$j] = @{@{$a}[$i]}[$j];
+        }
+    }
+    for (my $i = $nRowsA; $i < $nRowsA + $nRowsB; $i++) {
+        for (my $j = 0; $j < $nCols; $j++) {
+            @{@{$c}[$i]}[$j] = @{@{$b}[$i-$nRowsA]}[$j];
+        }
+    }
+    return $c;
+    
+    # # Make and return the new stacked matrix.
+    # push @{$a}, @{$b};
+    # return $a;
 }
 
 ################################################################################
@@ -540,91 +694,6 @@ sub test_hstack_vstack {
     linalg::printmat($B);
     linalg::printmat($C);
     linalg::printmat($D);
-}
-
-################################################################################
-
-sub zeros {
-    # Create an array or matrix which has the specified dimensions.
-
-    my $nRows = shift;                                  # desired number of rows
-    my $nCols = shift;                               # desired number of columns
-
-    # Check if it is an array or matrix, based on the number of inputs,
-    # then create the array/matrix of zeros, @z.
-    my @z;
-    $#z = ($nRows - 1);
-    if ($nRows && ! $nCols) {
-        for (my $i = 0; $i < $nRows; $i++) {
-            $z[$i] = 0;
-        }
-    } elsif ($nRows && $nCols) {
-        for (my $i = 0; $i < $nRows; $i++) {
-            my @tmp;
-            $#tmp = ($nCols - 1);
-            for (my $j = 0; $j < $nCols; $j++) {
-                $tmp[$j] = 0;
-            }
-            $z[$i] = \@tmp;
-        }
-    } elsif ($nRows == 0 || $nCols == 0) {
-        # Do nothing.
-    } else {
-        print STDERR "Bad input.  Please try again.\n"; die;
-    }
-    return \@z;
-}
-
-################################################################################
-
-sub setrand {
-    # Set values of an array or matrix to random numbers between 0 and 1.
-
-	my $x = shift;               # pointer to the array or matrix to be modified
-	my $a = 0;                                       # min val of random numbers
-	my $b = 1;                                       # max val of random numbers
-	if (scalar @_) { $a = shift; }
-	if (scalar @_) { $b = shift; }
-	
-    my $nRows = (scalar @{$x});
-	my $nCols = "";
-	if (ref @{$x}[0]) {
-		$nCols = (scalar @{@{$x}[0]});
-	}
-
-    # Check if it is an array or matrix, based on the number of inputs,
-    # then assign the values to the array or matrix.
-    if ($nRows && ! $nCols) {
-        for (my $i = 0; $i < $nRows; $i++) {
-            @{$x}[$i] = ($a + ($b - $a) * rand);
-        }
-    } elsif ($nRows && $nCols) {
-        for (my $i = 0; $i < $nRows; $i++) {
-            for (my $j = 0; $j < $nCols; $j++) {
-                @{@{$x}[$i]}[$j] = ($a + ($b - $a) * rand);
-            }
-        }
-    } elsif ($nRows == 0 || $nCols == 0) {
-        # Do nothing.
-    } else {
-        print STDERR "Bad input.  Please try again.\n"; die;
-    }
-    return $x;
-}
-
-################################################################################
-
-sub test_zeros_setrand {
-	my $z0 = linalg::zeros(0);
-    my $z1 = linalg::zeros(5);
-    my $z2 = linalg::zeros(3, 6);
-	linalg::printmat($z0);
-    linalg::printmat($z1);
-    linalg::printmat($z2);
-	my $r1 = linalg::setrand($z1, -1, 1);
-	my $r2 = linalg::setrand($z2, 0, 20);
-	linalg::printmat($r1);
-	linalg::printmat($r2);
 }
 
 ################################################################################
@@ -661,7 +730,7 @@ sub transpose {
     my $n = scalar @{@{$A}[0]};
     
     # Assign elements to the transpose matrix, then return it.
-    my $At = linalg::zeros($n, $m);
+    my $At = linalg::alloc($n, $m);
     for (my $i = 0; $i < $n; $i++) {
         for (my $j = 0; $j < $m; $j++) {
             @{@{$At}[$i]}[$j] = @{@{$A}[$j]}[$i];
@@ -768,7 +837,7 @@ sub dot {
             print STDERR "nCols of LHS matrix must equal length of RHS array..\n"; die;
         }
 		my $nRows = scalar @{$x};
-        my $z = linalg::zeros($nRows);
+        my $z = linalg::alloc($nRows);
         for (my $i = 0; $i < $nRows; $i++) {
             @{$z}[$i] = linalg::dot(@{$x}[$i], $y);
         }
@@ -784,7 +853,7 @@ sub dot {
         my $yT = linalg::transpose($y);
         my $nRows = scalar @{$x};
 		my $nCols = scalar @{$yT};
-        my $z = linalg::zeros($nRows, $nCols);
+        my $z = linalg::alloc($nRows, $nCols);
         for (my $i = 0; $i < $nRows; $i++) {
             for (my $j = 0; $j < $nCols; $j++) {
                 @{@{$z}[$i]}[$j] = linalg::dot(@{$x}[$i], @{$yT}[$j]);
@@ -803,8 +872,8 @@ sub test_dot {
 		my $iter = 100;
 		my $m = 500;
 		my $n = 1000;
-		my $A = linalg::zeros($m, $n);
-		my $x = linalg::zeros($n);
+		my $A = linalg::alloc($m, $n);
+		my $x = linalg::alloc($n);
 		my ($i, $b);
 		my $computeTime = time;
 		for ( $i = 0; $i < $iter; $i++) {
@@ -929,8 +998,8 @@ sub test_solve {
 	if ((shift @_) eq "speed") {
 		my $iter = 100;
 		my $n = 100;
-		my $A = linalg::zeros($n, $n);
-		my $b = linalg::zeros($n, 1);
+		my $A = linalg::alloc($n, $n);
+		my $b = linalg::alloc($n, 1);
 		my ($i, $x);
 		my $computeTime = time;
 		for ($i = 0; $i < $iter; $i++) {

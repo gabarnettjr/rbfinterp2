@@ -277,7 +277,7 @@ sub phs {
     } elsif (ref $x && ref $y && (scalar @{$x} == scalar @{$y})
     && ! ref @{$x}[0] && ! ref @{$y}[0]) {
         my $nE = scalar @{$x};
-        my @z = linalg::zeros($nE);
+        my @z = linalg::alloc($nE);
         for (my $i = 0; $i < $nE; $i++) {
             $z[$i] = linalg::phs(@{$x}[$i], @{$y}[$i], $rbfPow);
         }
@@ -301,7 +301,7 @@ sub rbfmat {
     my $nRows = scalar @{$x};
     my $nCols = scalar @{$xc};
     
-    my $A = linalg::zeros($nRows, $nCols);
+    my $A = linalg::alloc($nRows, $nCols);
     for (my $i = 0; $i < $nRows; $i++) {
         for (my $j = 0; $j < $nCols; $j++) {
             @{@{$A}[$i]}[$j] = rbf2::phs(@{$x}[$i] - @{$xc}[$j]
@@ -337,7 +337,8 @@ sub interp {
     } else {
         print STDERR "Please use either 0, 2, or 4 optional inputs.\n"; die;
     }
-    print ("RBF is r**$rbfPow, polynomials up to degree $deg are included.\n");
+
+    print ("RBF = r**$rbfPow, polynomials up to degree $deg are included.\n");
     
     # Normalize coordinates for good conditioning.
     ($x, $y, $X, $Y) = rbf2::normalize($x, $y, $X, $Y);
@@ -354,7 +355,7 @@ sub interp {
     my $numP = int (($deg + 1) * ($deg + 2) / 2 + .5);
     my $zp1 = linalg::zeros($numP);
     my $zp2 = linalg::zeros($numP, $numP);
-    my $F = linalg::zeros(scalar @{$X});
+    my $F = linalg::alloc(scalar @{$X});
     my $nSubdomains = scalar @{$xmc};
 
     for (my $i = 0; $i < $nSubdomains; $i++) {

@@ -171,7 +171,7 @@ def rectangles(x, y, xe, ye, nSubd=-1, mSubd=-1, deg=-1) :
         
         # If nSubd and mSubd are function inputs, then return the results now.
         if deg == -1 :
-            print('{0:1d} x {1:1d} subdomains\n'.format(nSubd, mSubd))
+            print('{0:1d} x {1:1d} subdomains'.format(nSubd, mSubd))
             return xmc, ymc, w, ell
         
         # Find minimum number of nodes in a subdomain or adjacent subdomains.
@@ -183,7 +183,7 @@ def rectangles(x, y, xe, ye, nSubd=-1, mSubd=-1, deg=-1) :
         
         # Quit if the minimum number of nodes gets small enough.
         if minNodes < 4 * numP :
-            print('{0:1d} x {1:1d} subdomains\n'.format(nSubd, mSubd))
+            print('{0:1d} x {1:1d} subdomains'.format(nSubd, mSubd))
             return xmc, ymc, w, ell
         else :
             nSubd += 1
@@ -264,7 +264,8 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
     if (rbfPow == -1) and (deg == -1) :
         rbfPow = 3
         deg = 1
-    print('RBF is r**{0:1d}, polynomials up to degree {1:1d} are included.\n'.format(rbfPow, deg))
+    
+    print('RBF = r**{0:1d}, polynomials up to degree {1:1d} are included.'.format(rbfPow, deg))
     
     # Normalize coordinates for good conditioning.
     x, y, xe, ye = normalize(x, y, xe, ye)
@@ -288,7 +289,7 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
          # Get all nodes in the rectangular subdomain or adjacent subdomains.
          ind = inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)
          if len(ind) < int(round(1.5 * numP)) :
-             print('numLocalNodes = {0:2d}\n'.format(len(ind)))
+             print('numLocalNodes = {0:2d}'.format(len(ind)))
              raise ValueError("Not enough data for this polynomial degree.\n")
          xind = x[ind]
          yind = y[ind]

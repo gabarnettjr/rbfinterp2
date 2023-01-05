@@ -33,7 +33,7 @@ mSubd = parse(Int, ARGS[5])
 computeTime = time()
 fe_approx = rbf2_interp(x, y, f, xe, ye; rbfPow=rbfPow, deg=deg, nSubd=nSubd, mSubd=mSubd)
 computeTime = time() - computeTime
-print("computeTime = " * string(computeTime))
+print("computeTime = " * string(computeTime) * "\n")
 
 # Save the interpolated values to a file.
 io_saveArray(dataDir * "\\fe_approx.txt", fe_approx)

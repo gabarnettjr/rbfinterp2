@@ -310,7 +310,8 @@ function rbf2_interp(x, y, f, xe, ye; rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1)
         rbfPow = 3
         deg = 1
     end
-    @printf("RBF is r^%i, polynomials up to degree %i are included.\n", rbfPow, deg)
+
+    @printf("RBF = r^%i, polynomials up to degree %i are included.\n", rbfPow, deg)
     
     # Normalize coordinates for good conditioning.
     (x, y, xe, ye) = rbf2_normalize(x, y, xe, ye)

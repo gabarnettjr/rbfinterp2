@@ -329,9 +329,8 @@ function rbf2_interp(x, y, f, xe, ye; rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1)
     zp1 = zeros(numP, 1)
     zp2 = zeros(numP, numP)
     fe_approx = zeros(length(xe))
-    nSubdomains = length(xmc)
 
-    for i in 1 : nSubdomains
+    for i in 1 : length(xmc)
         
         # Get all nodes in the rectangular subdomain or adjacent subdomains.
         ind = rbf2_inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)

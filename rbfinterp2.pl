@@ -32,7 +32,7 @@ use rbf2;
 
 my ($dataDir, $checkError, $rbfPow, $deg, $nSubd, $mSubd);
 
-$dataDir = "randCoords\\smoothData";
+$dataDir = "randomCoords\\smoothData";
 $checkError = "y";
 $rbfPow = 3;
 $deg = 1;

@@ -362,7 +362,7 @@ sub interp {
         
         # Get all nodes in the rectangular subdomain or adjacent subdomains.
         my $ind = rbf2::inrectangle($x, $y, @{$xmc}[$i], @{$ymc}[$i], 3*$ell, 3*$w);
-        if ((scalar @{$ind}) < int (1.5 * $numP + .5)) {
+        if (scalar @{$ind} < int (1.5 * $numP + .5)) {
             print ("numLocalNodes = " . (scalar @{$ind}) . "\n");
             print STDERR "Not enough data for this polynomial degree.\n"; die;
         }

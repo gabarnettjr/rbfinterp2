@@ -38,10 +38,12 @@ if checkError :
 else :
     fe = ()
 
-a = np.min(np.hstack((x, xe)))
-b = np.max(np.hstack((x, xe)))
-c = np.min(np.hstack((y, ye)))
-d = np.max(np.hstack((y, ye)))
+ab = np.hstack((x, xe))
+a = np.min(ab)
+b = np.max(ab)
+cd = np.hstack((y, ye))
+c = np.min(cd)
+d = np.max(cd)
 
 triang = mtri.Triangulation(x, y)                                        # nodes
 TRIANG = mtri.Triangulation(xe, ye)                          # evaluation points

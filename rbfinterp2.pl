@@ -108,14 +108,20 @@ system "python plotResults.py $dataDir $checkError";
 ################################################################################
 
 sub helpString {
-	my $s = "\nPlease use up to six inputs.\n";
-    $s .= "(1) The first input is the folder containing input function data.\n";
-    $s .= "(2) The second input is whether or not to calculate the error,\n";
-    $s .= "    where \"y\" means calculate the error, and \"n\" means don\'t.\n";
-    $s .= "(3) The third input is the rbf exponent (default 3).\n";
-    $s .= "(4) The fourth input is the polynomial degree (default 1).\n";
-    $s .= "(5) The fifth input is number of subdomains across (default auto calculate).\n";
-    $s .= "(6) The sixth input is number of subdomains going down (default auto calculate).\n\n";
+	my $s = "\n";
+	$s .= "\"rbfinterp2.pl\": A script for interpolating (x,y,f) to (xe,ye,fe_approx).\n\n";
+	$s .= "To run the script, you need a coordinates directory that contains these:\n";
+	$s .= "x.txt, y.txt, xe.txt, ye.txt\n\n";
+	$s .= "Inside the coordinates directory should be a function value subdirectory, containing these:\n";
+	$s .= "f.txt  (required)\n";
+	$s .= "fe.txt (optional, but needed for error calculation)\n\n";
+	$s .= "This script accepts up to 6 command-line inputs.\n";
+    $s .= "(1) The first input is the path to the folder that contains your function values (default: .\\randomCoords\\smoothData).\n";
+    $s .= "(2) The second input is whether or not to calculate the error, y or n            (default: n).\n";
+    $s .= "(3) The third input is the rbf exponent, an odd integer                          (default: 3).\n";
+    $s .= "(4) The fourth input is the polynomial degree, an integer from 0 up to 4         (default: 1).\n";
+    $s .= "(5) The fifth input is number of subdomains across, a positive integer           (default: auto calculate).\n";
+    $s .= "(6) The sixth input is number of subdomains going down, a positive integer       (default: auto calculate).\n\n";
 	return $s;
 }
 

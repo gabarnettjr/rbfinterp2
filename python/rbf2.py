@@ -288,7 +288,7 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
          
          # Get all nodes in the rectangular subdomain or adjacent subdomains.
          ind = inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)
-         if len(ind) < int(round(1.5 * numP)) :
+         if len(ind) < round(1.5 * numP) :
              print('numLocalNodes = {0:2d}'.format(len(ind)))
              raise ValueError("Not enough data for this polynomial degree.\n")
          xind = x[ind]

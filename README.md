@@ -19,7 +19,7 @@ node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used as an estimate for
   * Press the Start Button in windows, and begin typing "anaconda".  It should pop up.
 * Navigate to the folder where you saved this repository.
   * cd C:\Users\gabar\gitRepos\rbfinterp2
-### Example problem using random nodes
+### Using random nodes and a smooth underlying function
 * Create a new folder for holding coordinates (nodes and evaluation points).
   * mkdir randomCoords
 * Create a subfolder of the coordinates folder to store function values at the nodes.

@@ -3,7 +3,7 @@ Local interpolation of data (*x*, *y*, *f*(*x*,*y*)) using polyharmonic spline (
 Assuming that your data comes from some underlying (possibly unknown) function *f*, the goal of\
 *approximation* is to estimate *f*(*x<sub>e*,*y<sub>e*), where (*x<sub>e*, *y<sub>e*) are so-called "evaluation points".  More specifically,\
 the goal of *interpolation* (one type of approximation) is to construct a function *g* that matches *f* at every\
-node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used as an estimate for *f*(*x<sub>e*,*y<sub>e*).
+node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x<sub>e*,*y<sub>e*).
 ## Requirements
 * Windows
 * Perl

@@ -27,9 +27,9 @@ $nx = 16;
 $ny = 16;
 $alp = .3;
 $a = 0;
-$b = 50000;
+$b = 1;
 $c = 0;
-$d = 50000;
+$d = 1;
 
 if (scalar @ARGV) {
 	$coordsDir = shift;

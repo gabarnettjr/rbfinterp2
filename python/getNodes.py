@@ -1,11 +1,11 @@
 # windows
+"""
+Starting from a Cartesian grid, this script will jostle the nodes by some
+chosen amount to create "random" nodes for testing.
 
-# Starting from a Cartesian grid, this script will jostle the nodes by some
-# chosen amount to create "random" nodes for testing.
-
-# Greg Barnett
-# December 2022
-
+Greg Barnett
+December 2022
+"""
 ################################################################################
 
 import os
@@ -52,6 +52,8 @@ if len(argv) > 0 :
     d = float(argv[0]);  argv = argv[1:]
 
 ################################################################################
+
+# Jostle the nodes and save them in the coordinates directory.
 
 xx, yy = rbf2.jostle(nx, ny, alp, a, b, c, d)
 

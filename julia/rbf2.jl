@@ -335,7 +335,7 @@ function rbf2_interp(x, y, f, xe, ye; rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1)
         
         # Get all nodes in the rectangular subdomain or adjacent subdomains.
         ind = rbf2_inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)
-        if length(ind) < Int(round(1.5 * numP))
+        if length(ind) < round(1.5 * numP)
             @printf("numLocalNodes = %i\n", length(ind))
             error("Not enough data for this polynomial degree.\n")
         end

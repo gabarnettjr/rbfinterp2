@@ -32,9 +32,9 @@ d = 1
 
 argv = argv[1:]
 if len(argv) > 0 :
-	coordsDir = argv[0];  argv = argv[1:]
-	if not os.path.isdir(coordsDir) :
-		raise ValueError("First input must be a coordinates directory.\n")
+    coordsDir = argv[0];  argv = argv[1:]
+    if not os.path.isdir(coordsDir) :
+        raise ValueError("First input must be a coordinates directory.\n")
 
 if len(argv) > 0 :
     nx = int(argv[0]);  argv = argv[1:]

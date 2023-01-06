@@ -44,4 +44,5 @@ node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x
   * perl rbfinterp2.pl coords1\data1 y
     * Second input "y" means "yes", the true function IS available for comparison.
 ## More Help
-Navigate to where you saved the repo and type "python rbfinterp2.pl --help".
+Navigate to where you saved the repo and execute this command.
+* perl rbfinterp2.pl --help

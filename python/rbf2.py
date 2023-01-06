@@ -1,26 +1,26 @@
 # windows
+"""
+This package contains subroutines for two-dimensional RBF interpolation using
+polyharmonic spline (PHS) radial basis functions (RBFs), together with
+polynomial functions up to a specified degree.  The main subroutine is called
+"interp", but it uses the other subroutines to achieve a local, yet accurate
+approximation.  In the typical situation, the user will have nodes (x, y), and
+corresponding known function values f.  The goal is to use these known values
+to predict the value of the function on some other set of points (xe, ye),
+called "evaluation points".  If the user is not interested in adjusting
+parameters, then they can use the interp function by passing in five inputs:
+x, y, f, xe, ye.
+The smallest rectangle that contains all nodes (x,y) will become the overall
+computational domain.  If the user does not supply extra inputs, then the
+domain will automatically be broken into a number of rectangular subdomains,
+so that many small "local" interpolation problems can be solved rather than
+one large "global" problem.  The main computational effort is solving for the
+coefficients that determine how much of each basis function are needed to
+match the function values at the nodes.
 
-# This package contains subroutines for two-dimensional RBF interpolation using
-# polyharmonic spline (PHS) radial basis functions (RBFs), together with
-# polynomial functions up to a specified degree.  The main subroutine is called
-# "interp", but it uses the other subroutines to achieve a local, yet accurate
-# approximation.  In the typical situation, the user will have nodes (x, y), and
-# corresponding known function values f.  The goal is to use these known values
-# to predict the value of the function on some other set of points (xe, ye),
-# called "evaluation points".  If the user is not interested in adjusting
-# parameters, then they can use the interp function by passing in five inputs:
-# x, y, f, xe, ye.
-# The smallest rectangle that contains all nodes (x,y) will become the overall
-# computational domain.  If the user does not supply extra inputs, then the
-# domain will automatically be broken into a number of rectangular subdomains,
-# so that many small "local" interpolation problems can be solved rather than
-# one large "global" problem.  The main computational effort is solving for the
-# coefficients that determine how much of each basis function are needed to
-# match the function values at the nodes.
-
-# Greg Barnett
-# January 2023
-
+Greg Barnett
+January 2023
+"""
 ################################################################################
 
 import numpy as np
@@ -28,8 +28,9 @@ import numpy as np
 ################################################################################
 
 def normalize(x, y, xe, ye) :
-    # Shift and scale coordinates for a well-conditioned linear system.
-    
+    """
+    Shift and scale coordinates for a well-conditioned linear system.
+    """
     # x                                                        x-coords of nodes
     # y                                                        y-coords of nodes
     # xe                                           x-coords of evaluation points
@@ -55,8 +56,9 @@ def normalize(x, y, xe, ye) :
 ################################################################################
 
 def jostle(nx, ny, alp, a, b, c, d) :
-    # Create "jostled" (not corners) Cartesian nodes, which are randomly moved.
-    
+    """
+    Create "jostled" (not corners) Cartesian nodes, which are randomly moved.
+    """
     # nx                         number of nodes going across (columns of nodes)
     # ny                              number of nodes going down (rows of nodes)
     # alp                                max proportion of node spacing for move
@@ -99,8 +101,9 @@ def jostle(nx, ny, alp, a, b, c, d) :
 ################################################################################
 
 def inrectangle(x, y, xmci, ymci, ell, w) :
-    # Find index of all points that lie in a particular rectangular subdomain.
-
+    """
+    Find index of all points that lie in a particular rectangular subdomain.
+    """
     # x                                                        array of x-coords
     # y                                                        array of y-coords
     # xmci                     single x-coord of center of rectangular subdomain
@@ -120,8 +123,9 @@ def inrectangle(x, y, xmci, ymci, ell, w) :
 ################################################################################
 
 def rectangles(x, y, xe, ye, nSubd=-1, mSubd=-1, deg=-1) :
-    # Find the center (xmc, ymc) and dimensions of each rectangular subdomain.
-    
+    """
+    Find the center (xmc, ymc) and dimensions of each rectangular subdomain.
+    """
     # x                                                        x-coords of nodes
     # y                                                        y-coords of nodes
     # xe                                                    x-coords of eval pts
@@ -192,8 +196,9 @@ def rectangles(x, y, xe, ye, nSubd=-1, mSubd=-1, deg=-1) :
 ################################################################################
 
 def polymat(x, y, deg) :
-	# Make a polynomial matrix with basis functions arranged in rows.
-	
+    """
+	Make a polynomial matrix with basis functions arranged in rows.
+	"""
     # x                                                        x-coords of input
     # y                                                        y-coords of input
     # deg                                largest poly degree to include in basis
@@ -217,8 +222,9 @@ def polymat(x, y, deg) :
 ################################################################################
 
 def phs(x, y, rbfPow) :
-	# Evaluate a polyharmonic spline function.
-	
+    """
+	Evaluate a polyharmonic spline function.
+	"""
     # x                                                        x-coords of input
     # y                                                        y-coords of input
     # rbfPow                                             exponent in the phs rbf
@@ -228,8 +234,9 @@ def phs(x, y, rbfPow) :
 ################################################################################
 
 def rbfmat(x, y, xc, yc, rbfPow) :
-    # RBF matrix with basis functions arranged in columns.
-
+    """
+    RBF matrix with basis functions arranged in columns.
+    """
     # x                                                     x-coords of eval pts
     # y                                                     y-coords of eval pts
     # xc                                                 x-coords of rbf centers
@@ -249,8 +256,9 @@ def rbfmat(x, y, xc, yc, rbfPow) :
 ################################################################################
 
 def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
-    # Interpolate (x,y,f) to (xe,ye,fe_approx) using PHS RBFs and polynomials.
-    
+    """
+    Interpolate (x,y,f) to (xe,ye,fe_approx) using PHS RBFs and polynomials.
+    """
     # x                                     x-coords where you KNOW the function
     # y                                     y-coords where you KNOW the function
     # f                                        known values of function on nodes

@@ -69,7 +69,7 @@ def jostle(nx, ny, alp, a, b, c, d) :
     yy = np.linspace(c, d, ny)
     xx, yy = np.meshgrid(xx, yy)
     xx = xx.flatten()
-    yy = yy.flatten
+    yy = yy.flatten()
     
     eps = 0.0001 * ((b - a) + (d - c)) / 2
     alp = ((b - a) / (nx - 1) * alp + (d - c) / (ny - 1) * alp) / 2

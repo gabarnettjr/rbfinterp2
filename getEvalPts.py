@@ -51,8 +51,8 @@ if len(argv) > 0 :   d = float(argv[0]);  argv = argv[1:]
 
 if (a == "") or (b == "") or (c == "") or (d == "") :
 	# Use nodes to get boundaries of eval pts.
-	x = IO.loadArray(coordsDir + "\\x.txt")
-	y = IO.loadArray(coordsDir + "\\y.txt")
+	x = IO.loadArray(os.path.join(coordsDir, "x.txt"))
+	y = IO.loadArray(os.path.join(coordsDir, "y.txt"))
 	a = np.min(x)
 	b = np.max(x)
 	c = np.min(y)

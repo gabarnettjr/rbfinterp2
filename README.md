@@ -17,7 +17,7 @@ node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x
   replace each backslash \\ with a forward slash /.
 * Navigate to the folder where you saved this repository.
   * cd C:\Users\gabar\gitRepos\rbfinterp2
-### Using random nodes and a smooth underlying function
+### Using random nodes and a smooth underlying function (toy problem)
 * Create a new folder for holding coordinates (nodes and evaluation points).
   * mkdir randomCoords
 * Create a subfolder of the coordinates folder to store function values at the nodes.
@@ -29,7 +29,7 @@ node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x
 * Run the main script rbfinterp2.py to interpolate and estimate function values at evaluation points.
   * python rbfinterp2.py randomCoords\smoothData y
     * Second input "y" means "yes", the true function IS available for comparison.
-### Using your own data
+### Using your own data (real problem)
 * Create a new folder for holding coordinates (nodes and evaluation points).
   * mkdir coords1
   * Save (delimited by '\n') coordinate data in your coordinate directory.

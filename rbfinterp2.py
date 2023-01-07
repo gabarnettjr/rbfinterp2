@@ -45,7 +45,7 @@ def helpString() :
     s += "(2) Whether or not to calculate the error, y or n              (default: n).\n"
     s += "(3) The rbf exponent, an odd integer                           (default: 3).\n"
     s += "(4) The polynomial degree, an integer from 0 up to 4           (default: 1).\n"
-    s += "(5) The number of subdomains across, a positive integer        (default: auto calculate).\n"
+    s += "(5) The number of subdomains going across, a positive integer  (default: auto calculate).\n"
     s += "(6) The number of subdomains going down, a positive integer    (default: auto calculate).\n\n"
     return s
 

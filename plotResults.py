@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 Creates one 2x2 array of subplots, each displaying some useful
 information about how well fe_approx approximates fe.  For comparison,
@@ -6,11 +7,12 @@ the known values at the evaluation points must be given in fe.
 Greg Barnett
 December 2022
 """
-from sys import argv
+from sys import path, argv
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import tri as mtri
 
+path.append(".")
 import IO
 
 plotTriangles = True

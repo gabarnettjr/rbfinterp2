@@ -16,7 +16,7 @@ use warnings;
 
 use Math::Trig;
 
-use lib ".";
+use lib ".\\perl";
 use io;
 use linalg;
 
@@ -24,7 +24,7 @@ use linalg;
 
 my ($dataDir, $ftype);
 
-$dataDir = "randomCoords\\smoothData";
+$dataDir = "..\\randomCoords\\smoothData";
 $ftype = "peaks and valleys";
 
 if (scalar @ARGV) {

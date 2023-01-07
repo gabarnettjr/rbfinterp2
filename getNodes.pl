@@ -11,7 +11,7 @@
 use strict;
 use warnings;
 
-use lib ".";
+use lib ".\\perl";
 use linalg;
 use io;
 use rbf2;
@@ -22,7 +22,7 @@ use rbf2;
 
 my ($coordsDir, $nx, $ny, $alp, $a, $b, $c, $d);
 
-$coordsDir = "randomCoords";
+$coordsDir = "..\\randomCoords";
 $nx = 16;
 $ny = 16;
 $alp = .3;

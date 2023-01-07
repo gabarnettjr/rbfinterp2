@@ -22,7 +22,7 @@
 use strict;
 use warnings;
 
-use lib ".";
+use lib ".\\perl";
 use io;
 use rbf2;
 
@@ -32,7 +32,7 @@ use rbf2;
 
 my ($dataDir, $checkError, $rbfPow, $deg, $nSubd, $mSubd);
 
-$dataDir = "randomCoords\\smoothData";
+$dataDir = "..\\randomCoords\\smoothData";
 $checkError = "y";
 $rbfPow = 3;
 $deg = 1;
@@ -74,36 +74,30 @@ if (scalar @ARGV) {
 
 # Interpolate using polyharmonic spline (PHS) radial basis functions (RBFs).
 
-if (-e "$dataDir\\fe_approx.txt") {
-	unlink "$dataDir\\fe_approx.txt";
-}
+# if (-e "$dataDir\\fe_approx.txt") {
+# 	unlink "$dataDir\\fe_approx.txt";
+# }
 
-# # USE PERL:
-# my $x  = io::loadArray("$dataDir\\..\\x.txt");
-# my $y  = io::loadArray("$dataDir\\..\\y.txt");
-# my $f  = io::loadArray("$dataDir\\f.txt");
-# my $xe = io::loadArray("$dataDir\\..\\xe.txt");
-# my $ye = io::loadArray("$dataDir\\..\\ye.txt");
-# my $computeTime = time;
-# my $fe_approx = rbf2::interp($x, $y, $f, $xe, $ye, $rbfPow, $deg, $nSubd, $mSubd);
-# $computeTime = time - $computeTime;
-# print "\$computeTime = $computeTime\n";
-# io::saveArray("$dataDir\\fe_approx.txt", $fe_approx);
+# USE PERL:
+my $x  = io::loadArray("$dataDir\\..\\x.txt");
+my $y  = io::loadArray("$dataDir\\..\\y.txt");
+my $f  = io::loadArray("$dataDir\\f.txt");
+my $xe = io::loadArray("$dataDir\\..\\xe.txt");
+my $ye = io::loadArray("$dataDir\\..\\ye.txt");
+my $computeTime = time;
+my $fe_approx = rbf2::interp($x, $y, $f, $xe, $ye, $rbfPow, $deg, $nSubd, $mSubd);
+$computeTime = time - $computeTime;
+print "\$computeTime = $computeTime\n";
+io::saveArray("$dataDir\\fe_approx.txt", $fe_approx);
 
-# # USE JULIA:
-# system "julia .\\julia\\rbfinterp2.jl $dataDir $rbfPow $deg $nSubd $mSubd";
-
-# USE PYTHON:
-system "python .\\python\\rbfinterp2.py $dataDir $rbfPow $deg $nSubd $mSubd";
-
-if (! -e "$dataDir\\fe_approx.txt") {
-	print STDERR "Please investigate error during fe_approx.txt creation.\n"; die;
-}
+# if (! -e "$dataDir\\fe_approx.txt") {
+# 	print STDERR "Please investigate error during fe_approx.txt creation.\n"; die;
+# }
 
 ################################################################################
 
-# Use python to visualize the results.
-system "python plotResults.py $dataDir $checkError";
+# # Use python to visualize the results.
+# system "python plotResults.py $dataDir $checkError";
 
 ################################################################################
 

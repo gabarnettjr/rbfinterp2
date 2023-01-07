@@ -5,10 +5,6 @@ Assuming that your data comes from some underlying (possibly unknown) function *
 the goal of *interpolation* (one type of approximation) is to construct a function *g* that matches *f* at every\
 node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x<sub>e*,*y<sub>e*).
 ## Requirements
-* Windows
-* Perl
-  * Install Strawberry Perl
-  * https://strawberryperl.com/
 * Python (including numpy, matplotlib, and other packages)
   * Install Anaconda
   * https://www.anaconda.com/
@@ -25,11 +21,11 @@ node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x
 * Create a subfolder of the coordinates folder to store function values at the nodes.
   * mkdir randomCoords\smoothData
 * Run three scripts to generate some nodes and function values.
-  * perl getNodes.pl randomCoords
-  * perl getEvalPts.pl randomCoords
-  * perl getFuncVals.pl randomCoords\smoothData
-* Run the main script rbfinterp2.pl to interpolate and estimate function values at evaluation points.
-  * perl rbfinterp2.pl randomCoords\smoothData y
+  * python getNodes.py randomCoords
+  * python getEvalPts.py randomCoords
+  * python getFuncVals.py randomCoords\smoothData
+* Run the main script rbfinterp2.py to interpolate and estimate function values at evaluation points.
+  * python rbfinterp2.py randomCoords\smoothData y
     * Second input "y" means "yes", the true function IS available for comparison.
 ### Using your own data
 * Create a new folder for holding coordinates (nodes and evaluation points).
@@ -40,9 +36,9 @@ node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x
   * mkdir coords1\data1
   * Save (delimited by '\n') function data in your data directory.
     * f.txt (required), fe.txt (optional, but required for error calculation)
-* Run the main script rbfinterp2.pl to interpolate and estimate function values at evaluation points.
-  * perl rbfinterp2.pl coords1\data1 y
+* Run the main script rbfinterp2.py to interpolate and estimate function values at evaluation points.
+  * python rbfinterp2.py coords1\data1 y
     * Second input "y" means "yes", the true function IS available for comparison.
 ## More Help
 Navigate to where you saved the repo and execute this command.
-* perl rbfinterp2.pl --help
+* python rbfinterp2.py --help

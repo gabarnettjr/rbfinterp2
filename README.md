@@ -39,8 +39,8 @@ node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x
   * Save (delimited/separated by newlines) function data in your data directory.
     * f.txt (required), fe.txt (optional, but required for error calculation)
 * Run the main script rbfinterp2.py to interpolate and estimate function values at evaluation points.
-  * python rbfinterp2.py coords1\data1 y
-    * Second input "y" means "yes", the true function IS available for comparison.
+  * python rbfinterp2.py coords1\data1 n
+    * Second input "n" means "no", the true function is NOT available for comparison.
 ## More Help
 Navigate to where you saved the repo and execute this command.
 * python rbfinterp2.py --help

@@ -6,7 +6,6 @@ the goal of *interpolation* (one type of approximation) is to construct a functi
 node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x<sub>e*,*y<sub>e*).
 ## Requirements
 * Python (including numpy, matplotlib, and other packages)
-  * Install Anaconda
   * https://www.anaconda.com/
 ## Instructions
 * Download and unzip the repository folder.

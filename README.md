@@ -15,6 +15,8 @@ node (*x*, *y*), so that *g*(*x<sub>e*,*y<sub>e*) can be used to estimate *f*(*x
 * Navigate to the folder where you saved this repository.
   * cd C:\Users\gabar\gitRepos\rbfinterp2
 ### Using random nodes and a smooth underlying function
+* NOTE: In the examples that follow, if you are using mac or linux, then\
+  replace each backslash (\) with a forward slash (/).
 * Create a new folder for holding coordinates (nodes and evaluation points).
   * mkdir randomCoords
 * Create a subfolder of the coordinates folder to store function values at the nodes.

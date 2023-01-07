@@ -21,5 +21,5 @@ def loadArray(fileName) :
 def saveArray(fileName, values) :
     with open(fileName, "w") as fh :
         for i in range(len(values)) :
-            fh.write('{0:17.14f}\n'.format(values[i]))
+            fh.write('{0:1.15e}\n'.format(values[i]))
 

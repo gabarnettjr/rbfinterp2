@@ -27,7 +27,8 @@ argv = argv[1:]
 if len(argv) > 0 :
     dataDir = argv[0];  argv = argv[1:]
     if not os.path.isdir(dataDir) :
-        raise ValueError("First input must be a data directory.")
+        s = "First input must be a data directory."
+        raise ValueError(s)
 
 if len(argv) > 0 : ftype = argv[0].lower();  argv = argv[1:]
 

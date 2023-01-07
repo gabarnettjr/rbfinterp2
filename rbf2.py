@@ -136,7 +136,8 @@ def rectangles(x, y, xe, ye, nSubd=-1, mSubd=-1, deg=-1) :
         nSubd = -1                           # number of subdomains going across
         mSubd = -1                             # number of subdomains going down
     else :
-        raise ValueError("Must supply either (nSubd, mSubd) or deg, but not both.\n")
+        s = "Must supply either (nSubd, mSubd) or deg, but not both."
+        raise ValueError(s)
 
     # The rectangular computational domain, [a,b] x [c,d].
     ab = np.hstack((x, xe))
@@ -204,7 +205,8 @@ def polymat(x, y, deg) :
     # deg                                largest poly degree to include in basis
 
     if (deg < 0) or (deg > 4) :
-        raise ValueError("Use a polynomial degree from 0 (constant) up to 4, please.\n")
+        s = "Use a polynomial degree from 0 (constant) up to 4, please."
+        raise ValueError(s)
     
     p = np.ones(np.shape(x))
     
@@ -284,7 +286,8 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
     elif deg != -1 :
         xmc, ymc, w, ell = rectangles(x, y, xe, ye, deg=deg)
     else :
-        raise ValueError("Need either (nSubd,mSubd) or deg, or both.\n")
+        s = "Need either (nSubd,mSubd) or deg, or both."
+        raise ValueError(s)
     
     # Set up a few helper variables.
     numP = int(round((deg + 1) * (deg + 2) / 2))
@@ -298,7 +301,8 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
          ind = inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)
          if len(ind) < round(1.5 * numP) :
              print('numLocalNodes = {0:2d}'.format(len(ind)))
-             raise ValueError("Not enough data for this polynomial degree.\n")
+             s = "Not enough data for this polynomial degree."
+             raise ValueError(s)
          xind = x[ind]
          yind = y[ind]
          

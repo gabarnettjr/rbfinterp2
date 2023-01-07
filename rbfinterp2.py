@@ -68,9 +68,11 @@ if len(argv) > 0 :
         exit()
     dataDir = argv[0];  argv = argv[1:]
     if not os.path.isdir(dataDir) :
-        raise ValueError("First input must be a data directory.")
+        s = "First input must be a data directory."
+        raise ValueError(s)
     elif not os.path.isfile(os.path.join(dataDir, "f.txt")) :
-        raise ValueError("Data directory must contain function values.")
+        s = "Data directory must contain function values."
+        raise ValueError(s)
     checkError = "n"
 
 if len(argv) > 0 :
@@ -88,7 +90,8 @@ if len(argv) > 0 :  nSubd = int(argv[0]);  argv = argv[1:]
 if len(argv) > 0 :  mSubd = int(argv[0]);  argv = argv[1:]
 
 if len(argv) > 0 :
-    raise ValueError("Too many inputs.  Max number of inputs is 6.")
+    s = "Too many inputs.  Max number of inputs is 6."
+    raise ValueError(s)
 
 ################################################################################
 
@@ -116,7 +119,8 @@ IO.saveArray(os.path.join(dataDir, "fe_approx.txt"), fe_approx)
 #  str(rbfPow) + " " + str(deg) + " " + str(nSubd) + " " + str(mSubd))
 
 if not os.path.isfile(os.path.join(dataDir, "fe_approx.txt")) :
-    raise ValueError("Please investigate error during fe_approx.txt creation.")
+    s = "Please investigate error during fe_approx.txt creation."
+    raise ValueError(s)
 
 ################################################################################
 

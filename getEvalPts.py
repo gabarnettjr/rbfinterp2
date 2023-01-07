@@ -32,10 +32,12 @@ argv = argv[1:]
 if len(argv) > 0 :
 	coordsDir = argv[0];  argv = argv[1:]
 	if not os.path.isdir(coordsDir) :
-		raise ValueError("First input must be a coordinates directory.")
+		s = "First input must be a coordinates directory."
+		raise ValueError(s)
 	elif (not os.path.isfile(os.path.join(coordsDir, "x.txt"))) \
     or   (not os.path.isfile(os.path.join(coordsDir, "y.txt"))) :
-		raise ValueError("Coordinates directory must contain nodes.")
+		s = "Coordinates directory must contain nodes."
+		raise ValueError(s)
 
 if len(argv) > 0 :  nx =   int(argv[0]);  argv = argv[1:]
 if len(argv) > 0 :  ny =   int(argv[0]);  argv = argv[1:]

@@ -281,7 +281,7 @@ def polymat(x, y, deg, kind="i") :
 
 def phs(x, y, rbfPow) :
     """
-	Evaluate a polyharmonic spline function.
+	Evaluate a polyharmonic spline basis function.
 	"""
     # x                                                        x-coords of input
     # y                                                        y-coords of input

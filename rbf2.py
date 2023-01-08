@@ -196,7 +196,7 @@ def rectangles(x, y, xe, ye, nSubd=-1, mSubd=-1, deg=-1) :
 
 ################################################################################
 
-def polymat(x, y, deg) :
+def polymat(x, y, deg, kind="i") :
     """
 	Make a polynomial matrix with basis functions arranged in rows.
 	"""
@@ -208,16 +208,72 @@ def polymat(x, y, deg) :
         s = "Use a polynomial degree from 0 (constant) up to 4, please."
         raise ValueError(s)
     
-    p = np.ones(np.shape(x))
+    numPoly = int(round((deg + 1) * (deg + 2) / 2))
+    p = np.zeros((numPoly, len(x)))
     
-    if deg >= 1 :
-        p = np.vstack((p, x, y))
-    if deg >= 2 :
-        p = np.vstack((p, x**2, x*y, y**2))
-    if deg >= 3 :
-        p = np.vstack((p, x**3, x**2*y, x*y**2, y**3))
-    if deg >= 4 :
-        p = np.vstack((p, x**4, x**3*y, x**2*y**2, x*y**3, y**4))
+    if kind == "i" :
+        p[0,:] = 1
+        if deg >= 1 :
+            p[1,:] = x
+            p[2,:] = y
+        if deg >= 2 :
+            p[3,:] = x**2
+            p[4,:] = x*y
+            p[5,:] = y**2
+        if deg >= 3 :
+            p[6,:] = x**3
+            p[7,:] = x**2*y
+            p[8,:] = x*y**2
+            p[9,:] = y**3
+        if deg >= 4 :
+            p[10,:] = x**4
+            p[11,:] = x**3*y
+            p[12,:] = x**2*y**2
+            p[13,:] = x*y**3
+            p[14,:] = y**4
+    elif kind == "x" :
+        p[0,:] = 0
+        if deg >= 1 :
+            p[1,:] = 1
+            p[2,:] = 0
+        if deg >= 2 :
+            p[3,:] = 2*x
+            p[4,:] = y
+            p[5,:] = 0
+        if deg >= 3 :
+            p[6,:] = 3*x**2
+            p[7,:] = 2*x*y
+            p[8,:] = y**2
+            p[9,:] = 0
+        if deg >= 4 :
+            p[10,:] = 4*x**3
+            p[11,:] = 3*x**2*y
+            p[12,:] = 2*x*y**2
+            p[13,:] = y**3
+            p[14,:] = 0
+    elif kind == "y" :
+        p[0,:] = 0
+        if deg >= 1 :
+            p[1,:] = 0
+            p[2,:] = 1
+        if deg >= 2 :
+            p[3,:] = 0
+            p[4,:] = x
+            p[5,:] = 2*y
+        if deg >= 3 :
+            p[6,:] = 0
+            p[7,:] = x**2
+            p[8,:] = x*2*y
+            p[9,:] = 3*y**2
+        if deg >= 4 :
+            p[10,:] = 0
+            p[11,:] = x**3
+            p[12,:] = x**2*2*y
+            p[13,:] = x*3*y**2
+            p[14,:] = 4*y**3
+    else :
+        s = "Optional variable \"kind\" should be \"i\", \"x\", or \"y\"."
+        raise ValueError(s)
     
     return p
 
@@ -235,7 +291,31 @@ def phs(x, y, rbfPow) :
 
 ################################################################################
 
-def rbfmat(x, y, xc, yc, rbfPow) :
+def phs_x(x, y, rbfPow) :
+    """
+	Evaluate the derivative of a PHS basis function with respect to x.
+	"""
+    # x                                                        x-coords of input
+    # y                                                        y-coords of input
+    # rbfPow                                             exponent in the phs rbf
+
+    return (rbfPow*x) * (x**2 + y**2) ** ((rbfPow - 2)/2)
+
+################################################################################
+
+def phs_y(x, y, rbfPow) :
+    """
+	Evaluate the derivative of a PHS basis function with respect to y.
+	"""
+    # x                                                        x-coords of input
+    # y                                                        y-coords of input
+    # rbfPow                                             exponent in the phs rbf
+
+    return (rbfPow*y) * (x**2 + y**2) ** ((rbfPow - 2)/2)
+
+################################################################################
+
+def rbfmat(x, y, xc, yc, rbfPow, func=phs) :
     """
     RBF matrix with basis functions arranged in columns.
     """
@@ -251,7 +331,7 @@ def rbfmat(x, y, xc, yc, rbfPow) :
     A = np.zeros((nRows, nCols))
     for i in range(nRows) :
         for j in range(nCols) :
-            A[i,j] = phs(x[i] - xc[j], y[i] - yc[j], rbfPow)
+            A[i,j] = func(x[i] - xc[j], y[i] - yc[j], rbfPow)
     
     return A
 
@@ -331,8 +411,8 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
          yeIND = ye[IND]
          
          # Get rbf-poly evaluation matrix.
-         A = rbfmat(xeIND, yeIND, xind, yind, rbfPow)
-         p = polymat(xeIND, yeIND, deg).T
+         A = rbfmat(xeIND, yeIND, xind, yind, rbfPow, func=phs)
+         p = polymat(xeIND, yeIND, deg, kind="i").T
          
          # Evaluate the interpolant at the evaluation points in the subdomain.
          fe_approx[IND] = np.hstack((A, p)).dot(lam).flatten()

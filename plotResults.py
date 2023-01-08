@@ -98,15 +98,23 @@ else :
     plt.subplots_adjust(top=0.978, bottom=0.025, left=0.042, right=0.992 \
     , hspace=0.145, wspace=0.094)
 
-clevels = getContourLevels(np.hstack((f, fe_approx, fe)), nColors = nc)
-# , useMeanOf = np.array([0]), minDiff = 0, nColors = nc)
+# For interpolation (default)
+clevels_e = getContourLevels(np.hstack((f, fe_approx, fe)), nColors = nc)
+clevels_a = clevels_e
+
+# # For looking at the first derivative.
+# clevels_e = getContourLevels(np.hstack((f, fe)), nColors = nc)
+# clevels_a = getContourLevels(fe_approx, nColors = nc)
+
+# How you want to format the min/max values printed in the titles.
+fmt = "6.3f"
 
 # The known values on the nodes.
 if checkError :
     ax = fig.add_subplot(221)
 else :
     ax = fig.add_subplot(121)
-cs = ax.tricontourf(triang, f, levels = clevels)
+cs = ax.tricontourf(triang, f, levels = clevels_e)
 if plotTriangles :
     for i in range(len(xt)) :
         ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
@@ -114,29 +122,29 @@ ax.plot(x, y, 'ko', markersize = ms)
 ax.axis('image')
 ax.axis(box)
 fig.colorbar(cs)
-plt.title("Triangulation of Input Data at Nodes")
+plt.title(('Input Data [{0:' + fmt + '}, {1:' + fmt + '}]').format(np.min(f), np.max(f)))
 
 # The interpolant evaluated at the eval pts.
 if checkError :
     ax = fig.add_subplot(222)
 else :
     ax = fig.add_subplot(122)
-cs = ax.tricontourf(TRIANG, fe_approx, levels = clevels)
+cs = ax.tricontourf(TRIANG, fe_approx, levels = clevels_a)
 if plotTriangles :
     for i in range(len(xt)) :
         ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
 ax.plot(x, y, 'ko', markersize = ms)
-ax.plot(xe, ye, 'r.', markersize = ms/2)
+# ax.plot(xe, ye, 'r.', markersize = ms/2)
 ax.axis('image')
 ax.axis(box)
 fig.colorbar(cs)
-plt.title("RBF Interpolant at Eval Pts")
+plt.title(('RBF Interpolant [{0:' + fmt + '}, {1:' + fmt + '}]').format(np.min(fe_approx), np.max(fe_approx)))
 
 if checkError :
 
     # The known values on the grid.
     ax = fig.add_subplot(223)
-    cs = ax.tricontourf(TRIANG, fe, levels = clevels)
+    cs = ax.tricontourf(TRIANG, fe, levels = clevels_e)
     if plotTriangles :
         for i in range(len(xt)) :
             ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
@@ -145,7 +153,7 @@ if checkError :
     ax.axis('image')
     ax.axis(box)
     fig.colorbar(cs)
-    plt.title("Known Values at Eval Pts")
+    plt.title(('Known Values [{0:' + fmt + '}, {1:' + fmt + '}]').format(np.min(fe), np.max(fe)))
 
     # The error relative to the known values on the grid.
     tmp = (fe_approx - fe) / np.max(np.abs(fe))
@@ -162,6 +170,6 @@ if checkError :
     ax.axis('image')
     ax.axis(box)
     fig.colorbar(cs)
-    plt.title("Relative Error at Eval Pts")
+    plt.title("Relative Error")
 
 plt.show()

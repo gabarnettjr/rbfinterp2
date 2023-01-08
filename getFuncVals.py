@@ -64,12 +64,22 @@ def eff(ftype, x, y, a, b, c, d) :
         z = np.exp(-(1/(.16*s))**2 * ((x - (a + .20*w))**2 + (y - (c + .70*ell))**2)) \
         +   np.exp(-(1/(.16*s))**2 * ((x - (a + .64*w))**2 + (y - (c + .10*ell))**2)) \
         +   np.exp(-(1/(.10*s))**2 * ((x - (a + .82*w))**2 + (y - (c + .76*ell))**2))
+    elif (ftype == "circle") or (ftype == "5") :
+        diameter = np.min(np.array([(b - a) / 2, (d - c) / 2]))
+        radius = diameter / 2
+        xc = (a + b) / 2
+        yc = (c + d) / 2
+        ii = np.sqrt((x - xc)**2 + (y - yc)**2) <= (diameter / 2)
+        z = np.zeros(x.shape)
+        z[ii] = 1
+        return z
     else :
         s = "Invalid choice for ftype.  Try again using one of these:\n"
         s += "(1) \"peaks and valleys\"\n"
         s += "(2) \"narrow stripes\"\n"
         s += "(3) \"wide stripes\"\n"
         s += "(4) \"bells\"\n"
+        s += "(5) \"circle\""
         raise ValueError(s)
     return z
 

@@ -7,6 +7,7 @@ the known values at the evaluation points must be given in fe.
 Greg Barnett
 December 2022
 """
+import os
 from sys import path, argv
 import numpy as np
 from matplotlib import pyplot as plt
@@ -27,16 +28,16 @@ else :
 
 ################################################################################
 
-x = IO.loadArray(dataDir + "\\..\\x.txt")
-y = IO.loadArray(dataDir + "\\..\\y.txt")
-xe = IO.loadArray(dataDir + "\\..\\xe.txt")
-ye = IO.loadArray(dataDir + "\\..\\ye.txt")
+x = IO.loadArray(os.path.join(dataDir, "..", "x.txt"))
+y = IO.loadArray(os.path.join(dataDir, "..", "y.txt"))
+xe = IO.loadArray(os.path.join(dataDir, "..", "xe.txt"))
+ye = IO.loadArray(os.path.join(dataDir, "..", "ye.txt"))
 
 figNum = 1
-f = IO.loadArray(dataDir + "\\f.txt")
-fe_approx = IO.loadArray(dataDir + "\\fe_approx.txt")
+f = IO.loadArray(os.path.join(dataDir, "f.txt"))
+fe_approx = IO.loadArray(os.path.join(dataDir, "fe_approx.txt"))
 if checkError :
-    fe = IO.loadArray(dataDir + "\\fe.txt")
+    fe = IO.loadArray(os.path.join(dataDir, "fe.txt"))
 else :
     fe = ()
 

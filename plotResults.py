@@ -139,7 +139,7 @@ ax.plot(x, y, 'ko', markersize = ms)
 ax.axis('image')
 ax.axis(box)
 fig.colorbar(cs)
-plt.title(('RBF Interpolant [{0:' + fmt + '}, {1:' + fmt + '}]').format(np.min(fe_approx), np.max(fe_approx)))
+plt.title(('RBF-Poly Approximant [{0:' + fmt + '}, {1:' + fmt + '}]').format(np.min(fe_approx), np.max(fe_approx)))
 
 if checkError :
 

@@ -355,7 +355,10 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
         rbfPow = 3
         deg = 1
     
-    print('RBF = r**{0:1d}, polynomials up to degree {1:1d} are included.'.format(rbfPow, deg))
+    if rbfPow == -1 :
+        print('RBF = NONE, polynomials up to degree {0:1d} are included.'.format(deg))
+    else :
+        print('RBF = r**{0:1d}, polynomials up to degree {1:1d} are included.'.format(rbfPow, deg))
     
     # Normalize coordinates for good conditioning.
     x, y, xe, ye = normalize(x, y, xe, ye)
@@ -396,30 +399,27 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
         xeIND = xe[IND]
         yeIND = ye[IND]
 
+        # Put together the RBF-poly approximation at the evaluation points.
         if (rbfPow == -1) :
             # Just do regular polynomial least squares.
             lam = np.linalg.lstsq(p.T, f[ind], rcond=None)[0]
             p = polymat(xeIND, yeIND, deg, kind="i")
-            fe_approx[IND] = ((p.T).dot(lam)).flatten()
+            fe_approx[IND] = p.T.dot(lam).flatten()
         else :
             # Make the rbf matrix (square).
             A = rbfmat(xind, yind, xind, yind, rbfPow)
-
             # Put them together to create the combined rbf-poly matrix (square).
             A = np.hstack((A, p.T))
             p = np.hstack((p, zp2))
             A = np.vstack((A, p))
-
             # Get function values and solve for coefficients, $lam.
             lam = np.zeros((len(ind), 1))
             lam[:,0] = f[ind]
             lam = np.vstack((lam, zp1))
             lam = np.linalg.solve(A, lam)
-
             # Get rbf-poly evaluation matrix.
             A = rbfmat(xeIND, yeIND, xind, yind, rbfPow, func=phs)
             p = polymat(xeIND, yeIND, deg, kind="i").T
-
             # Evaluate the interpolant at the evaluation points in the subdomain.
             fe_approx[IND] = np.hstack((A, p)).dot(lam).flatten()
     

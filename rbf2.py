@@ -376,46 +376,52 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
     fe_approx = np.zeros(len(xe))
     
     for i in range(len(xmc)) :
-         
-         # Get all nodes in the rectangular subdomain or adjacent subdomains.
-         ind = inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)
-         if len(ind) < round(1.5 * numP) :
-             print('numLocalNodes = {0:2d}'.format(len(ind)))
-             s = "Not enough data for this polynomial degree."
-             raise ValueError(s)
-         xind = x[ind]
-         yind = y[ind]
-         
-         # Make the polynomial matrix.
-         p = polymat(xind, yind, deg)
-         
-         # Make the rbf matrix (square).
-         A = rbfmat(xind, yind, xind, yind, rbfPow)
-         
-         # Put them together to create the combined rbf-poly matrix (square).
-         A = np.hstack((A, p.T))
-         p = np.hstack((p, zp2))
-         A = np.vstack((A, p))
-         
-         # Get function values and solve for coefficients, $lam.
-         lam = np.zeros((len(ind), 1))
-         lam[:,0] = f[ind]
-         lam = np.vstack((lam, zp1))
-         lam = np.linalg.solve(A, lam)
-         
-         # Find evaluation points in the rectangular subdomain.
-         IND = inrectangle(xe, ye, xmc[i], ymc[i], ell, w)
-         if len(IND) == 0 :
-             next
-         xeIND = xe[IND]
-         yeIND = ye[IND]
-         
-         # Get rbf-poly evaluation matrix.
-         A = rbfmat(xeIND, yeIND, xind, yind, rbfPow, func=phs)
-         p = polymat(xeIND, yeIND, deg, kind="i").T
-         
-         # Evaluate the interpolant at the evaluation points in the subdomain.
-         fe_approx[IND] = np.hstack((A, p)).dot(lam).flatten()
+
+        # Get all nodes in the rectangular subdomain or adjacent subdomains.
+        ind = inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)
+        if len(ind) < round(1.5 * numP) :
+            print('numLocalNodes = {0:2d}'.format(len(ind)))
+            s = "Not enough data for this polynomial degree."
+            raise ValueError(s)
+        xind = x[ind]
+        yind = y[ind]
+
+        # Make the polynomial matrix.
+        p = polymat(xind, yind, deg)
+
+        # Find evaluation points in the rectangular subdomain.
+        IND = inrectangle(xe, ye, xmc[i], ymc[i], ell, w)
+        if len(IND) == 0 :
+            next
+        xeIND = xe[IND]
+        yeIND = ye[IND]
+
+        if (rbfPow == -1) :
+            # Just do regular polynomial least squares.
+            lam = np.linalg.lstsq(p.T, f[ind], rcond=None)[0]
+            p = polymat(xeIND, yeIND, deg, kind="i")
+            fe_approx[IND] = ((p.T).dot(lam)).flatten()
+        else :
+            # Make the rbf matrix (square).
+            A = rbfmat(xind, yind, xind, yind, rbfPow)
+
+            # Put them together to create the combined rbf-poly matrix (square).
+            A = np.hstack((A, p.T))
+            p = np.hstack((p, zp2))
+            A = np.vstack((A, p))
+
+            # Get function values and solve for coefficients, $lam.
+            lam = np.zeros((len(ind), 1))
+            lam[:,0] = f[ind]
+            lam = np.vstack((lam, zp1))
+            lam = np.linalg.solve(A, lam)
+
+            # Get rbf-poly evaluation matrix.
+            A = rbfmat(xeIND, yeIND, xind, yind, rbfPow, func=phs)
+            p = polymat(xeIND, yeIND, deg, kind="i").T
+
+            # Evaluate the interpolant at the evaluation points in the subdomain.
+            fe_approx[IND] = np.hstack((A, p)).dot(lam).flatten()
     
     return fe_approx
 

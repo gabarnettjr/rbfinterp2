@@ -399,7 +399,7 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
         xeIND = xe[IND]
         yeIND = ye[IND]
 
-        # Put together the RBF-poly approximation at the evaluation points.
+        # Put together the RBF-poly approximant at the evaluation points.
         if (rbfPow == -1) :
             # Just do regular polynomial least squares.
             lam = np.linalg.lstsq(p.T, f[ind], rcond=None)[0]

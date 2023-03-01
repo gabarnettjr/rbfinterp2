@@ -108,7 +108,7 @@ clevels_a = clevels_e
 # clevels_a = getContourLevels(fe_approx, nColors = nc)
 
 # How you want to format the min/max values printed in the titles.
-fmt = "6.3f"
+fmt = "7.4f"
 
 # The known values on the nodes.
 if checkError :

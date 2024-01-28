@@ -98,25 +98,25 @@ if len(argv) > 0 :
 if os.path.isfile(os.path.join(dataDir, "fe_approx.txt")) :
     os.remove(os.path.join(dataDir, "fe_approx.txt"))
 
-# Load everything and interpolate in python.
-x  = IO.loadArray(os.path.join(dataDir, "..", "x.txt"))
-y  = IO.loadArray(os.path.join(dataDir, "..", "y.txt"))
-f  = IO.loadArray(os.path.join(dataDir, "f.txt"))
-xe = IO.loadArray(os.path.join(dataDir, "..", "xe.txt"))
-ye = IO.loadArray(os.path.join(dataDir, "..", "ye.txt"))
-computeTime = time()
-fe_approx = rbf2.interp(x, y, f, xe, ye, rbfPow=rbfPow, deg=deg, nSubd=nSubd, mSubd=mSubd)
-computeTime = time() - computeTime
-print("computeTime = " + str(computeTime))
-IO.saveArray(os.path.join(dataDir, "fe_approx.txt"), fe_approx)
+# # Load everything and interpolate in python.
+# x  = IO.loadArray(os.path.join(dataDir, "..", "x.txt"))
+# y  = IO.loadArray(os.path.join(dataDir, "..", "y.txt"))
+# f  = IO.loadArray(os.path.join(dataDir, "f.txt"))
+# xe = IO.loadArray(os.path.join(dataDir, "..", "xe.txt"))
+# ye = IO.loadArray(os.path.join(dataDir, "..", "ye.txt"))
+# computeTime = time()
+# fe_approx = rbf2.interp(x, y, f, xe, ye, rbfPow=rbfPow, deg=deg, nSubd=nSubd, mSubd=mSubd)
+# computeTime = time() - computeTime
+# print("computeTime = " + str(computeTime))
+# IO.saveArray(os.path.join(dataDir, "fe_approx.txt"), fe_approx)
 
 # # Load everything and interpolate in perl.
 # os.system("perl " + os.path.join("perl", "rbfinterp2.pl") + " " + dataDir + " " + \
 # checkError + " " + str(rbfPow) + " " + str(deg) + " " + str(nSubd) + " " + str(mSubd))
 
-# # Load everything and interpolate in julia.
-# os.system("julia " + os.path.join("julia", "rbfinterp2.jl") + " " + dataDir + " " + \
-#  str(rbfPow) + " " + str(deg) + " " + str(nSubd) + " " + str(mSubd))
+# Load everything and interpolate in julia.
+os.system("julia " + os.path.join("julia", "rbfinterp2.jl") + " " + dataDir + " " + \
+ str(rbfPow) + " " + str(deg) + " " + str(nSubd) + " " + str(mSubd))
 
 if not os.path.isfile(os.path.join(dataDir, "fe_approx.txt")) :
     s = "Please investigate error during fe_approx.txt creation."

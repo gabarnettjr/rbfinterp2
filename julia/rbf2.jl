@@ -1,4 +1,4 @@
-# windows
+#windows
 
 using Printf
 using LinearAlgebra
@@ -205,7 +205,7 @@ function rbf2_rectangles(x, y, xe, ye; nSubd=-1, mSubd=-1, deg=-1)
         end
         
         # Find minimum number of nodes in a subdomain or adjacent subdomains.
-        minNodes = 99
+        minNodes = 999999
         for i in 1 : length(xmc)
             ind = rbf2_inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)
             if length(ind) < minNodes
@@ -214,12 +214,12 @@ function rbf2_rectangles(x, y, xe, ye; nSubd=-1, mSubd=-1, deg=-1)
         end
         
         # Quit if the minimum number of nodes gets small enough.
-        if minNodes < 4 * np
+        if minNodes < 10 * np
             @printf("%i x %i subdomains\n", nSubd, mSubd)
             return (xmc, ymc, w, ell)
         else
-            nSubd += 1
-            mSubd += 1
+            nSubd *= 2
+            mSubd *= 2
         end
     end
 end

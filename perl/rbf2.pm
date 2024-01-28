@@ -204,7 +204,7 @@ sub rectangles {
         }
         
         # Find minimum number of nodes in a subdomain or adjacent subdomains.
-        my $minNodes = 99;
+        my $minNodes = 999999;
         for (my $i = 0; $i < (scalar @{$xmc}); $i++) {
             my $ind = rbf2::inrectangle($x, $y, @{$xmc}[$i], @{$ymc}[$i], 3*$ell, 3*$w);
             if ((scalar @{$ind}) < $minNodes) {
@@ -213,12 +213,12 @@ sub rectangles {
         }
         
         # Quit if the minimum number of nodes gets small enough.
-        if ($minNodes < (4 * $np)) {
+        if ($minNodes < (10 * $np)) {
             print ("$nSubd x $mSubd subdomains\n");
             return ($xmc, $ymc, $w, $ell);
         } else {
-            $nSubd += 1;
-            $mSubd += 1;
+            $nSubd *= 2;
+            $mSubd *= 2;
         }
     }
 }

@@ -16,7 +16,7 @@ from matplotlib import tri as mtri
 path.append(".")
 import IO
 
-plotTriangles = True
+plotTriangles = False
 
 dataDir = argv[1]
 if argv[2] == "y" :
@@ -110,16 +110,19 @@ clevels_a = clevels_e
 # How you want to format the min/max values printed in the titles.
 fmt = "7.4f"
 
+theColorMap = 'rainbow';
+
 # The known values on the nodes.
 if checkError :
     ax = fig.add_subplot(221)
 else :
     ax = fig.add_subplot(121)
-cs = ax.tricontourf(triang, f, levels = clevels_e)
+cs = ax.tricontourf(triang, f, levels = clevels_e, cmap = theColorMap)
 if plotTriangles :
     for i in range(len(xt)) :
         ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
-ax.plot(x, y, 'ko', markersize = ms)
+# ax.plot(x, y, 'ko', markersize = ms)
+ax.plot(xe, ye, 'ko', markersize = ms)
 ax.axis('image')
 ax.axis(box)
 fig.colorbar(cs)
@@ -130,12 +133,12 @@ if checkError :
     ax = fig.add_subplot(222)
 else :
     ax = fig.add_subplot(122)
-cs = ax.tricontourf(TRIANG, fe_approx, levels = clevels_a)
+cs = ax.tricontourf(TRIANG, fe_approx, levels = clevels_a, cmap = theColorMap)
 if plotTriangles :
     for i in range(len(xt)) :
         ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
-ax.plot(x, y, 'ko', markersize = ms)
-# ax.plot(xe, ye, 'r.', markersize = ms/2)
+# ax.plot(x, y, 'ko', markersize = ms)
+ax.plot(xe, ye, 'ko', markersize = ms)
 ax.axis('image')
 ax.axis(box)
 fig.colorbar(cs)
@@ -145,12 +148,12 @@ if checkError :
 
     # The known values on the grid.
     ax = fig.add_subplot(223)
-    cs = ax.tricontourf(TRIANG, fe, levels = clevels_e)
+    cs = ax.tricontourf(TRIANG, fe, levels = clevels_e, cmap = theColorMap)
     if plotTriangles :
         for i in range(len(xt)) :
             ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
-    ax.plot(x, y, 'ko', markersize = ms)
-    # ax.plot(xe, ye, 'r.', markersize = ms/2)
+    # ax.plot(x, y, 'ko', markersize = ms)
+    ax.plot(xe, ye, 'ko', markersize = ms)
     ax.axis('image')
     ax.axis(box)
     fig.colorbar(cs)
@@ -162,12 +165,12 @@ if checkError :
     # , useMeanOf = np.array([0]), minDiff = 0, nColors = nc)
 
     ax = fig.add_subplot(224)
-    cs = ax.tricontourf(TRIANG, tmp, levels = clevels)
+    cs = ax.tricontourf(TRIANG, tmp, levels = clevels, cmap = theColorMap)
     if plotTriangles :
         for i in range(len(xt)) :
             ax.plot(xt[i], yt[i], 'k-', linewidth = lw)
-    ax.plot(x, y, 'ko', markersize = ms)
-    # ax.plot(xe, ye, 'r.', markersize = ms/2)
+    # ax.plot(x, y, 'ko', markersize = ms)
+    ax.plot(xe, ye, 'ko', markersize = ms)
     ax.axis('image')
     ax.axis(box)
     fig.colorbar(cs)

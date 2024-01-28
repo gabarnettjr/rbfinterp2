@@ -180,19 +180,19 @@ def rectangles(x, y, xe, ye, nSubd=-1, mSubd=-1, deg=-1) :
             return xmc, ymc, w, ell
         
         # Find minimum number of nodes in a subdomain or adjacent subdomains.
-        minNodes = 99
+        minNodes = 999999
         for i in range(len(xmc)) :
             ind = inrectangle(x, y, xmc[i], ymc[i], 3*ell, 3*w)
             if len(ind) < minNodes :
                 minNodes = len(ind)
         
         # Quit if the minimum number of nodes gets small enough.
-        if minNodes < 4 * numP :
+        if minNodes < 10 * numP :
             print('{0:1d} x {1:1d} subdomains'.format(nSubd, mSubd))
             return xmc, ymc, w, ell
         else :
-            nSubd += 1
-            mSubd += 1
+            nSubd *= 2
+            mSubd *= 2
 
 ################################################################################
 
@@ -395,7 +395,7 @@ def interp(x, y, f, xe, ye, rbfPow=-1, deg=-1, nSubd=-1, mSubd=-1) :
         # Find evaluation points in the rectangular subdomain.
         IND = inrectangle(xe, ye, xmc[i], ymc[i], ell, w)
         if len(IND) == 0 :
-            next
+            continue
         xeIND = xe[IND]
         yeIND = ye[IND]
 

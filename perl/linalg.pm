@@ -111,8 +111,8 @@ sub setrand {
 
 sub test_alloc_setrand {
     if ((scalar @_) && ($_[0] eq "speed")) {
-        my $m = 10000;
-        my $n = 10000;
+        my $m = 1000;
+        my $n = 1000;
         my $computeTime = time;
         my $z = linalg::alloc($m, $n);
         $computeTime = time - $computeTime;

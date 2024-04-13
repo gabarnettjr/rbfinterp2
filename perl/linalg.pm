@@ -46,25 +46,67 @@ sub alloc {
 ################################################################################
 
 sub zeros {
-    # Create an array or matrix filled with zeros (slower than alloc).
-
-    my $nRows = shift;                                  # desired number of rows
-    my $nCols = shift;                               # desired number of columns
-
+    my $nRows = shift;
+    my $nCols = shift;
+    
     if ($nRows && $nCols) {
-        my $z = linalg::alloc($nRows, $nCols);
+        my @z = ();
         for (my $i = 0; $i < $nRows; $i++) {
-            for (my $j = 0; $j < $nCols; $j++) {
-                @{@{$z}[$i]}[$j] = 0;
-            }
+            my @tmp = (0) x $nCols;
+            push @z, \@tmp;
         }
-        return $z;
+        return \@z;
     } elsif ($nRows && ! $nCols) {
-        my $z = linalg::alloc($nRows);
+        my @z = (0) x $nRows;
+        return \@z;
+    } else {
+        print STDERR "Bad input.  Please try again.\n"; die;
+    }
+}
+
+################################################################################
+
+# sub zeros {
+    # # Create an array or matrix filled with zeros (slower than alloc).
+
+    # my $nRows = shift;                                  # desired number of rows
+    # my $nCols = shift;                               # desired number of columns
+
+    # if ($nRows && $nCols) {
+        # my $z = linalg::alloc($nRows, $nCols);
+        # for (my $i = 0; $i < $nRows; $i++) {
+            # for (my $j = 0; $j < $nCols; $j++) {
+                # @{@{$z}[$i]}[$j] = 0;
+            # }
+        # }
+        # return $z;
+    # } elsif ($nRows && ! $nCols) {
+        # my $z = linalg::alloc($nRows);
+        # for (my $i = 0; $i < $nRows; $i++) {
+            # @{$z}[$i] = 0;
+        # }
+        # return $z;
+    # } else {
+        # print STDERR "Bad input.  Please try again.\n"; die;
+    # }
+# }
+
+################################################################################
+
+sub ones {
+    my $nRows = shift;
+    my $nCols = shift;
+    
+    if ($nRows && $nCols) {
+        my @z = ();
         for (my $i = 0; $i < $nRows; $i++) {
-            @{$z}[$i] = 0;
+            my @tmp = (1) x $nCols;
+            push @z, \@tmp;
         }
-        return $z;
+        return \@z;
+    } elsif ($nRows && ! $nCols) {
+        my @z = (1) x $nRows;
+        return \@z;
     } else {
         print STDERR "Bad input.  Please try again.\n"; die;
     }

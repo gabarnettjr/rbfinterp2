@@ -116,7 +116,11 @@ sub test_alloc_setrand {
         my $computeTime = time;
         my $z = linalg::alloc($m, $n);
         $computeTime = time - $computeTime;
-        print $computeTime;
+        print $computeTime . "\n";
+        $computeTime = time;
+        $z = linalg::zeros($m, $n);
+        $computeTime = time - $computeTime;
+        print $computeTime . "\n";
     } else {
         my $z1 = linalg::zeros(5);
         my $z2 = linalg::zeros(3, 6);

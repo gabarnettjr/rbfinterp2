@@ -549,16 +549,16 @@ sub test_get_set {
 
 sub meshgrid {
     # Create matrices @xx and @yy based on arrays @x and @y.  @x is repeated and
-	# stacked vertically, while @y is repeated and stacked horizontally.  In the
-	# end, the output matrices xx and yy should have numRows = len(y) and
-	# numCols = len(x).
+    # stacked vertically, while @y is repeated and stacked horizontally.  In the
+    # end, the output matrices xx and yy should have numRows = len(y) and
+    # numCols = len(x).
 
     my $x = shift;                                # pointer to array of x-coords
     my $y = shift;                                # pointer to array of y-coords
 
     my $nRows = scalar @{$y};
     my $nCols = scalar @{$x};
-    
+
     # Check that the input is appropriate.
     if (ref @{$x}[0] || ref @{$y}[0]) {
         print STDERR "\@x and \@y must both be simple arrays.\n"; die;

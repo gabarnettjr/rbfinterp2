@@ -896,18 +896,18 @@ sub test_add {
 
 sub dot {
     # Compute the dot product of arrays or matrices.  Note that simple arrays
-	# are considered to be column vectors.  To calculate the dot product of a
-	# row vector x and a matrix A, instead get the dot product of A^t with x^t.
+    # are considered to be column vectors.  To calculate the dot product of a
+    # row vector x and a matrix A, instead get the dot product of A^t with x^t.
 
     my $x = shift;                                       # first array or matrix
     my $y = shift;                                      # second array or matrix
 
     if (! ref @{$x}[0] && ! ref @{$y}[0]) {
         if ((scalar @{$x}) != (scalar @{$y})) {
-			print (scalar @{$x});
-			print "\n";
-			print (scalar @{$y});
-			print "\n";
+            print (scalar @{$x});
+            print "\n";
+            print (scalar @{$y});
+            print "\n";
             print STDERR "Arrays must be the same length to be dotted.\n"; die;
         }
         my $ne = scalar @{$x};
@@ -924,7 +924,7 @@ sub dot {
             print "\n\$rowsY = $rowsY\n";
             print STDERR "nCols of LHS matrix must equal length of RHS array..\n"; die;
         }
-		my $nRows = scalar @{$x};
+        my $nRows = scalar @{$x};
         my $z = linalg::alloc($nRows);
         for (my $i = 0; $i < $nRows; $i++) {
             @{$z}[$i] = linalg::dot(@{$x}[$i], $y);
@@ -940,7 +940,7 @@ sub dot {
         }
         my $yT = linalg::transpose($y);
         my $nRows = scalar @{$x};
-		my $nCols = scalar @{$yT};
+        my $nCols = scalar @{$yT};
         my $z = linalg::alloc($nRows, $nCols);
         for (my $i = 0; $i < $nRows; $i++) {
             for (my $j = 0; $j < $nCols; $j++) {

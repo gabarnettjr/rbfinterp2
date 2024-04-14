@@ -1083,38 +1083,38 @@ sub solve {
 ################################################################################
 
 sub test_solve {
-	if ((shift @_) eq "speed") {
-		my $iter = 100;
-		my $n = 100;
-		my $A = linalg::alloc($n, $n);
-		my $b = linalg::alloc($n, 1);
-		my ($i, $x);
-		my $computeTime = time;
-		for ($i = 0; $i < $iter; $i++) {
-			linalg::setrand($A, -1, 1);
-			linalg::setrand($b, -1, 1);
-			$x = linalg::solve($A, $b);
-		}
-		$computeTime = time - $computeTime;
-		print "$computeTime\n";
-	} else {
-		# Make up a matrix @A.
-		my $A = [[1,2,1], [4,5,2], [1,8,3]];
-		# Make up a vector @b.
-		my $b = [9, 3, 2];
-		# Solve the system.
-		my $x = linalg::solve($A, $b);
-		# Test if it worked.
-		print "\@A =\n";
-		linalg::printmat($A);
-		print "\@x = ";
-		linalg::printmat($x);
-		my $prod = dot($A, $x);
-		print "\@A\*\@x = ";
-		linalg::printmat($prod);
-		print "\@b    = ";
-		linalg::printmat($b);
-	}
+    if ((shift @_) eq "speed") {
+        my $iter = 100;
+        my $n = 100;
+        my $A = linalg::alloc($n, $n);
+        my $b = linalg::alloc($n, 1);
+        my ($i, $x);
+        my $computeTime = time;
+        for ($i = 0; $i < $iter; $i++) {
+            linalg::setrand($A, -1, 1);
+            linalg::setrand($b, -1, 1);
+            $x = linalg::solve($A, $b);
+        }
+        $computeTime = time - $computeTime;
+        print "$computeTime\n";
+    } else {
+        # Make up a matrix @A.
+        my $A = [[1,2,1], [4,5,2], [1,8,3]];
+        # Make up a vector @b.
+        my $b = [9, 3, 2];
+        # Solve the system.
+        my $x = linalg::solve($A, $b);
+        # Test if it worked.
+        print "\@A =\n";
+        linalg::printmat($A);
+        print "\@x = ";
+        linalg::printmat($x);
+        my $prod = dot($A, $x);
+        print "\@A\*\@x = ";
+        linalg::printmat($prod);
+        print "\@b    = ";
+        linalg::printmat($b);
+    }
 }
 
 ################################################################################

@@ -120,12 +120,12 @@ sub ones {
 
 sub randmat {
     # Create a matrix or array filled with random numbers between 0 and 1.
-    
-	my $nRows = shift;
-	my $nCols = shift;
+
+    my $nRows = shift;
+    my $nCols = shift;
     my $a = 0;
     my $b = 1;
-    
+
     if (scalar @_ == 2) {
         $a = shift;
         $b = shift;

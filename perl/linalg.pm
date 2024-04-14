@@ -877,16 +877,16 @@ sub add {
 ################################################################################
 
 sub test_add {
-	# Make a 2x3 matrix @A.
+    # Make a 2x3 matrix @A.
     my $A = [[1,2,3], [4,5,6]];
-	# Make another 2x3 matrix @B.
+    # Make another 2x3 matrix @B.
     my $B = [[2,3,4], [3,4,5]];
-	# See what @A and @B look like.
-	linalg::printmat($A);
-	linalg::printmat($B);
-	# Find the sum of @A and @B.
-	my $C = linalg::add($A, $B);
-	linalg::printmat($C);
+    # See what @A and @B look like.
+    linalg::printmat($A);
+    linalg::printmat($B);
+    # Find the sum of @A and @B.
+    my $C = linalg::add($A, $B);
+    linalg::printmat($C);
     # Add first row of @A to first row of @B.
     my $c = linalg::add(@{$A}[0], @{$B}[0]);
     linalg::printmat($c);

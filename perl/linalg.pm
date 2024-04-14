@@ -157,17 +157,17 @@ sub randmat {
 sub setrand {
     # Set values of an existing array or matrix to random numbers from $a to $b.
 
-	my $x = shift;               # pointer to the array or matrix to be modified
-	my $a = 0;                                       # min val of random numbers
-	my $b = 1;                                       # max val of random numbers
-	if (scalar @_) { $a = shift; }
-	if (scalar @_) { $b = shift; }
-	
+    my $x = shift;               # pointer to the array or matrix to be modified
+    my $a = 0;                                       # min val of random numbers
+    my $b = 1;                                       # max val of random numbers
+    if (scalar @_) { $a = shift; }
+    if (scalar @_) { $b = shift; }
+
     my $nRows = (scalar @{$x});
-	my $nCols = "";
-	if (ref @{$x}[0]) {
-		$nCols = (scalar @{@{$x}[0]});
-	}
+    my $nCols = "";
+    if (ref @{$x}[0]) {
+        $nCols = (scalar @{@{$x}[0]});
+    }
 
     # Check if it is an array or matrix, based on the number of inputs,
     # then assign the values to the array or matrix.

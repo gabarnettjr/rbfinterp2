@@ -46,6 +46,8 @@ sub alloc {
 ################################################################################
 
 sub zeros {
+    # Create an array or matrix filled with zeros.
+    
     my $nRows = shift;
     my $nCols = shift;
     
@@ -94,6 +96,8 @@ sub zeros {
 ################################################################################
 
 sub ones {
+    # Create an array or matrix filled with ones.
+    
     my $nRows = shift;
     my $nCols = shift;
     
@@ -114,8 +118,44 @@ sub ones {
 
 ################################################################################
 
+sub randmat {
+    # Create a matrix or array filled with random numbers between 0 and 1.
+    
+	my $nRows = shift;
+	my $nCols = shift;
+    my $a = 0;
+    my $b = 1;
+    
+    if (scalar @_ == 2) {
+        $a = shift;
+        $b = shift;
+    }
+
+    # Check if it is an array or matrix, based on the number of inputs,
+    # then assign the values to the array or matrix.
+    if ($nRows && ! $nCols) {
+        my $x = linalg::alloc($nRows);
+        for (my $i = 0; $i < $nRows; $i++) {
+            @{$x}[$i] = $a + ($b - $a) * rand;
+        }
+        return $x;
+    } elsif ($nRows && $nCols) {
+        my $x = linalg::alloc($nRows, $nCols);
+        for (my $i = 0; $i < $nRows; $i++) {
+            for (my $j = 0; $j < $nCols; $j++) {
+                @{@{$x}[$i]}[$j] = $a + ($b - $a) * rand;
+            }
+        }
+        return $x;
+    } else {
+        print STDERR "Bad input.  Please try again.\n"; die;
+    }
+}
+
+################################################################################
+
 sub setrand {
-    # Set values of an array or matrix to random numbers between 0 and 1.
+    # Set values of an existing array or matrix to random numbers from $a to $b.
 
 	my $x = shift;               # pointer to the array or matrix to be modified
 	my $a = 0;                                       # min val of random numbers
@@ -133,12 +173,12 @@ sub setrand {
     # then assign the values to the array or matrix.
     if ($nRows && ! $nCols) {
         for (my $i = 0; $i < $nRows; $i++) {
-            @{$x}[$i] = ($a + ($b - $a) * rand);
+            @{$x}[$i] = $a + ($b - $a) * rand;
         }
     } elsif ($nRows && $nCols) {
         for (my $i = 0; $i < $nRows; $i++) {
             for (my $j = 0; $j < $nCols; $j++) {
-                @{@{$x}[$i]}[$j] = ($a + ($b - $a) * rand);
+                @{@{$x}[$i]}[$j] = $a + ($b - $a) * rand;
             }
         }
     } elsif ($nRows == 0 || $nCols == 0) {
@@ -151,7 +191,7 @@ sub setrand {
 
 ################################################################################
 
-sub test_alloc_setrand {
+sub test_alloc_rand {
     if ((scalar @_) && ($_[0] eq "speed")) {
         my $m = 1000;
         my $n = 1000;
@@ -175,6 +215,8 @@ sub test_alloc_setrand {
         my $r2 = linalg::setrand($z2, 0, 20);
         linalg::printmat($r1);
         linalg::printmat($r2);
+        $z1 = linalg::randmat(4, 2, -1, 1);
+        linalg::printmat($z1);
     }
 }
 
@@ -433,7 +475,7 @@ sub linspace {
 ################################################################################
 
 sub test_linspace {
-    my $x = linalg::linspace(0, 1, 11);
+    my $x = linalg::linspace(0, 1.1, 11);
     my $y = linalg::linspace(-10, 10, 21);
     linalg::printmat($x);
     linalg::printmat($y);

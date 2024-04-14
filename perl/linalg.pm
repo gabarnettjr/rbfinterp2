@@ -956,33 +956,33 @@ sub dot {
 ################################################################################
 
 sub test_dot {
-	if ((shift @_) eq "speed") {
-		my $iter = 100;
-		my $m = 500;
-		my $n = 1000;
-		my $A = linalg::alloc($m, $n);
-		my $x = linalg::alloc($n);
-		my ($i, $b);
-		my $computeTime = time;
-		for ( $i = 0; $i < $iter; $i++) {
-			$A = linalg::setrand($A, -1, 1);
-			$x = linalg::setrand($x, -1, 1);
-			$b = linalg::dot($A, $x);
-		}
-		$computeTime = time - $computeTime;
-		print "$computeTime\n";
-	} else {
-		# Make a 2x3 matrix @A.
-		my $A = [[1,2,3], [4,5,6]];
-		# Make a 3x4 matrix @B.
-		my $B = [[2,3,4,5], [3,4,5,6], [4,5,6,7]];
-		# See what @A and @B look like.
-		linalg::printmat($A);
-		linalg::printmat($B);
-		# Find the product of @A and @B.
-		my $C = linalg::dot($A, $B);
-		linalg::printmat($C);
-	}
+    if ((shift @_) eq "speed") {
+        my $iter = 100;
+        my $m = 500;
+        my $n = 1000;
+        my $A = linalg::alloc($m, $n);
+        my $x = linalg::alloc($n);
+        my ($i, $b);
+        my $computeTime = time;
+        for ( $i = 0; $i < $iter; $i++) {
+            $A = linalg::setrand($A, -1, 1);
+            $x = linalg::setrand($x, -1, 1);
+            $b = linalg::dot($A, $x);
+        }
+        $computeTime = time - $computeTime;
+        print "$computeTime\n";
+    } else {
+        # Make a 2x3 matrix @A.
+        my $A = [[1,2,3], [4,5,6]];
+        # Make a 3x4 matrix @B.
+        my $B = [[2,3,4,5], [3,4,5,6], [4,5,6,7]];
+        # See what @A and @B look like.
+        linalg::printmat($A);
+        linalg::printmat($B);
+        # Find the product of @A and @B.
+        my $C = linalg::dot($A, $B);
+        linalg::printmat($C);
+    }
 }
 
 ################################################################################
@@ -1017,7 +1017,7 @@ sub swaprows {
     my $A = shift;                                    # pointer to the matrix @A
     my $i = shift;                                            # index of one row
     my $j = shift;                                          # index of other row
-    
+
     # Swap pointers to the rows.
     my $tmp = @{$A}[$i];
     @{$A}[$i] = @{$A}[$j];

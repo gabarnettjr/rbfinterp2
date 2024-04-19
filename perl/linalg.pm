@@ -155,44 +155,22 @@ sub randmat {
 ################################################################################
 
 sub round {
-    # Round A single real number to the specified number of places.
+    # Round a matrix, array, or number to the specified number of places.
     
-    my $rn = shift;
+    my $in = shift;
     my $places = shift;
     
-    return ((int ($rn * 10**$places + .5)) / 10**$places) if $rn >= 0;
-    return ((int ($rn * 10**$places - .5)) / 10**$places) if $rn <= 0;
-}
-
-################################################################################
-
-sub roundmat {
-    # Round the elements of a matrix or array to the specified place.
-    
-    my $x = linalg::copy(shift);
-    my $places = shift;
-    
-    my $nRows = (scalar @{$x});
-    my $nCols = "";
-    if (ref @{$x}[0]) {
-        $nCols = (scalar @{@{$x}[0]});
+    if (! ref $in) {
+        return ((int ($in * 10**$places + .5)) / 10**$places) if $in >= 0;
+        return ((int ($in * 10**$places - .5)) / 10**$places) if $in <= 0;
     }
     
-    if ($nRows && ! $nCols) {
-        for (my $i = 0; $i < $nRows; $i++) {
-            @{$x}[$i] = linalg::round(@{$x}[$i], $places);
-        }
-    } elsif ($nRows && $nCols) {
-        for (my $i = 0; $i < $nRows; $i++) {
-            for (my $j = 0; $j < $nCols; $j++) {
-                @{@{$x}[$i]}[$j] = linalg::round(@{@{$x}[$i]}[$j], $places);
-            }
-        }
-    } elsif ($nRows == 0 || $nCols == 0) {
-        # Do nothing.
-    } else {
-        print STDERR "Bad input.  Please try again.\n"; die;
+    my $x = linalg::copy($in);
+    
+    for (my $i = 0; $i < scalar @{$x}; $i++) {
+        @{$x}[$i] = linalg::round(@{$x}[$i], $places);
     }
+    
     return $x;
 }
 

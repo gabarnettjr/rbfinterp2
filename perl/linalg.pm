@@ -154,6 +154,50 @@ sub randmat {
 
 ################################################################################
 
+sub round {
+    # Round A single real number to the specified number of places.
+    
+    my $rn = shift;
+    my $places = shift;
+    
+    return ((int ($rn * 10**$places + .5)) / 10**$places) if $rn >= 0;
+    return ((int ($rn * 10**$places - .5)) / 10**$places) if $rn <= 0;
+}
+
+################################################################################
+
+sub roundmat {
+    # Round the elements of a matrix or array to the specified place.
+    
+    my $x = linalg::copy(shift);
+    my $places = shift;
+    
+    my $nRows = (scalar @{$x});
+    my $nCols = "";
+    if (ref @{$x}[0]) {
+        $nCols = (scalar @{@{$x}[0]});
+    }
+    
+    if ($nRows && ! $nCols) {
+        for (my $i = 0; $i < $nRows; $i++) {
+            @{$x}[$i] = linalg::round(@{$x}[$i], $places);
+        }
+    } elsif ($nRows && $nCols) {
+        for (my $i = 0; $i < $nRows; $i++) {
+            for (my $j = 0; $j < $nCols; $j++) {
+                @{@{$x}[$i]}[$j] = linalg::round(@{@{$x}[$i]}[$j], $places);
+            }
+        }
+    } elsif ($nRows == 0 || $nCols == 0) {
+        # Do nothing.
+    } else {
+        print STDERR "Bad input.  Please try again.\n"; die;
+    }
+    return $x;
+}
+
+################################################################################
+
 sub setrand {
     # Set values of an existing array or matrix to random numbers from $a to $b.
 
